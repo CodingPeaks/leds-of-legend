@@ -1,17 +1,28 @@
 import eel
 import serial
+from serial import SerialException
 from win32gui import GetWindowText, GetForegroundWindow, IsWindowVisible, EnumWindows
 from win32process import GetWindowThreadProcessId
 from psutil import Process
 from ntpath import basename
 
-port = "COM10"
+port = "COM3"
 baudrate = 115200
 
 ser = serial.Serial(port, baudrate, timeout=0.01)
-
-
 eel.init('web')
+
+@eel.expose
+def init_serial_port(port):
+	try:
+		ser = serial.Serial(port, baudrate, timeout=0.01)
+		ser.isOpen()
+		print ("port is opened!")
+	except IOError:
+		ser.close()
+		ser.open()
+		print ("port was already open, was closed and opened again!")
+
 
 @eel.expose
 def get_serial_ports():
@@ -31,9 +42,7 @@ def get_serial_ports():
 @eel.expose
 def serial_write(port, baudrate, message):
     print(message)
-
-    if ser.isOpen():
-        ser.write(message.encode('ascii')+'\r')
+    ser.write(message.encode('ascii')+'\r')
 
 @eel.expose
 def get_foreground():
