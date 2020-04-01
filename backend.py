@@ -5,6 +5,12 @@ from win32process import GetWindowThreadProcessId
 from psutil import Process
 from ntpath import basename
 
+port = "COM10"
+baudrate = 115200
+
+ser = serial.Serial(port, baudrate, timeout=0.01)
+
+
 eel.init('web')
 
 @eel.expose
@@ -25,11 +31,9 @@ def get_serial_ports():
 @eel.expose
 def serial_write(port, baudrate, message):
     print(message)
-    ser = serial.Serial(port, baudrate, timeout=0.01)
 
     if ser.isOpen():
-        ser.write(message.encode('ascii')+'\r\n')
-        return "OK"
+        ser.write(message.encode('ascii')+'\r')
 
 @eel.expose
 def get_foreground():

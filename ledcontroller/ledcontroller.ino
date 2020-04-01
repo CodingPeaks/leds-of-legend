@@ -1,74 +1,63 @@
+//#define Sprintln(a) (Serial.println(a))
+//#define Sprint(a) (Serial.print(a))
+#define Sprintln(a)
+#define Sprint(a)
+
 String sdata = ""; // Initialised to nothing.
 byte test, start;
-String r, g, b, l, d, s;
+int fo;
+int s = 0;
+int d = 600;
+int b = 255;
+
+#define ledpin D3
 
 void setup (void) {
   Serial.begin(115200);
-  Serial.println("Command Interpreter");
-  pinMode(D4, OUTPUT);
+  Sprintln("Command Interpreter");
+  pinMode(ledpin, OUTPUT);
 }
 
-void loop(void ) {
+void loop() {
   byte ch;
-  String valStr;
-  int val;
+  int i = 0;
 
   if (Serial.available()) {
     ch = Serial.read();
-
     sdata += (char)ch;
-
     if (ch == '\r') {
       sdata.trim();
-      //Serial.println("Data received");
+      do {
+        String got = getValue(sdata, ';', i);
+        switch (i) {
+          case 0:
+            s = got.toInt();
+            Sprintln("s:" + got);
+            break;
+          case 1:
+            d = got.toInt() * 10;
+            Sprint("d:");
+            Sprintln(got.toInt() * 10);
+            break;
+          case 2:
+            b = got.toInt() * 10;
+            Sprint("b:");
+            Sprintln(got.toInt() * 10);
+            break;
+        }
+        i++;
+      } while (getValue(sdata, ';', i) != "");
 
-      parseCom(sdata);
-
+      fo = lightLed(s, d, b);
       sdata = "";
     }
   }
-}
-
-void parseCom(String cnf) {
-
-  String parsed = "";
-  int i = 0;
-  //Serial.println("Parsing data -> " + cnf);
-
-  do {
-    parsed = getValue(cnf, '&', i);
-    String param = getValue(parsed, '=', 0);
-    String value = getValue(parsed, '=', 1);
-
-    if (param == "d") {
-      d = value;
-    }
-
-    if (param == "r") {
-      r = value;
-    }
-
-    if (param == "g") {
-      g = value;
-    }
-
-    if (param == "b") {
-      b = value;
-    }
-
-    if (param == "l") {
-      l = value;
-    }
-
-    if (param == "s") {
-      s = value;
-    }
-
-    i++;
-  } while (getValue(cnf, '&', i) != "");
-
-  lightLed();
-
+  if (fo) {
+    int timediff = millis() - fo;
+    int fade = map(timediff, 0, d, b, 0);
+    Serial.println(fade);
+    analogWrite(ledpin, fade);
+  }
 }
 
 String getValue(String dat, char separator, int index)
@@ -87,14 +76,11 @@ String getValue(String dat, char separator, int index)
   return found > index ? dat.substring(strIndex[0], strIndex[1]) : "";
 }
 
-void lightLed() {
-if(s.toInt()){
-  
-    digitalWrite(D4, s.toInt());
-
-
-  //Serial.println("OPTIONS -> Duration: " + d + " - RGB: " + r + "," + g + "," + b + " - Brightness:" + l);
-}else{
-    analogWrite(D4, 0);
-}
+int lightLed(int s, int d, int b) {
+  analogWrite(ledpin, s * b);
+  if (!s) {
+    return millis();
+  } else {
+    return 0;
+  }
 }

@@ -3,11 +3,11 @@ var last_event;
 
 function bindKey(action) {
     if(action == 'keydown'){
-        var cmd = 's=1&d=500';
+        var cmd = '1;20;15';
     } else if(action == 'keyup') {
-        var cmd = 's=0';
+        var cmd = '0';
     }
- eel.serial_write('COM4', 115200, cmd)(callBack)
+ eel.serial_write('COM10', 115200, cmd)(callBack)
 }
 
 function callBack() {
