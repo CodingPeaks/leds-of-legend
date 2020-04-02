@@ -7,8 +7,10 @@ String sdata = ""; // Initialised to nothing.
 byte test, start;
 int fo;
 int s = 0;
-int d = 600;
+int in = 300;
+int out = 600;
 int b = 255;
+int fadeIn, fadeOut;
 
 #define ledpin D3
 
@@ -35,11 +37,16 @@ void loop() {
             Sprintln("s:" + got);
             break;
           case 1:
-            d = got.toInt() * 10;
-            Sprint("d:");
+            in = got.toInt() * 10;
+            Sprint("i:");
             Sprintln(got.toInt() * 10);
             break;
           case 2:
+            out = got.toInt() * 10;
+            Sprint("o:");
+            Sprintln(got.toInt() * 10);
+            break;
+          case 3:
             b = got.toInt() * 10;
             Sprint("b:");
             Sprintln(got.toInt() * 10);
@@ -48,15 +55,25 @@ void loop() {
         i++;
       } while (getValue(sdata, ';', i) != "");
 
-      fo = lightLed(s, d, b);
+      fo = lightLed();
       sdata = "";
     }
   }
   if (fo) {
+
     int timediff = millis() - fo;
-    int fade = map(timediff, 0, d, b, 0);
-    Serial.println(fade);
-    analogWrite(ledpin, fade);
+
+    if (s) {
+      fadeIn = map(timediff, 0, in, fadeOut, b);
+      if (fadeIn > 255) {
+        fadeIn = 255;
+      }
+      analogWrite(ledpin, fadeIn);
+    } else {
+      fadeOut = map(timediff, 0, out, fadeIn, 0);
+      analogWrite(ledpin, fadeOut);
+    }
+
   }
 }
 
@@ -76,11 +93,7 @@ String getValue(String dat, char separator, int index)
   return found > index ? dat.substring(strIndex[0], strIndex[1]) : "";
 }
 
-int lightLed(int s, int d, int b) {
+int lightLed() {
   analogWrite(ledpin, s * b);
-  if (!s) {
-    return millis();
-  } else {
-    return 0;
-  }
+  return millis();
 }
