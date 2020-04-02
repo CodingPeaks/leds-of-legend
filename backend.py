@@ -6,23 +6,11 @@ from win32process import GetWindowThreadProcessId
 from psutil import Process
 from ntpath import basename
 
-port = "COM3"
+port = "COM10"
 baudrate = 115200
-
 ser = serial.Serial(port, baudrate, timeout=0.01)
+
 eel.init('web')
-
-@eel.expose
-def init_serial_port(port):
-	try:
-		ser = serial.Serial(port, baudrate, timeout=0.01)
-		ser.isOpen()
-		print ("port is opened!")
-	except IOError:
-		ser.close()
-		ser.open()
-		print ("port was already open, was closed and opened again!")
-
 
 @eel.expose
 def get_serial_ports():
@@ -70,5 +58,6 @@ def get_procs():
 #print(serial_write("COM3", 921600, "RGBadfgdfgsdfgsdfgsdfgsdgsdfgsdfgsdfgsd"))
 #print(get_foreground())
 #print(get_procs())
+#init_serial_port("COM10")
 
 eel.start('index.html', size=(1000, 600))
