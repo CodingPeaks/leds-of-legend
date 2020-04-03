@@ -20,19 +20,26 @@
             <div class="animated-gradient"></div>
             <div class="row h-100 align-items-center">
                 <div id="sidebar" class="col-3 col-md h-100">
-                    <div class="action-header">ACTIONS</div>
+                    <div class="action-header">MACRO</div>
                     <div class="action-cnt">
                     	<div class="action-row"><button id="new-action" class="btn">New</button></div>
+                        <div id="macro-ul" class="macros">
+                            
+                        </div>
+                        <div class="form-group serial-cnt">
+                            <label for="serial-port">Serial Port</label>
+                            <select class="form-control" id="serial-port" onkeydown="IgnoreAlpha(event);">
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="col-9 col-md h-100">
                 	<div class="row h-25 align-items-center">
                         <div class="col-5 col-md-5 h-100">
                     		<div class="form-group">
-    						    <label for="serial-port">Serial Port</label>
-    						    <select class="form-control" id="serial-port" onkeydown="IgnoreAlpha(event);">
-    						    </select>
-    					  	</div>
+                                <label for="macro_name">Macro Name</label>
+                                <input id="macro_name" type="text" class="form-control" placeholder="Default">
+                            </div>
                         </div>
                         <div class="col-2 col-md-2 h-100 align-items-center"></div>
                         <div class="col-5 col-md-5 h-100 align-items-center">
@@ -46,7 +53,24 @@
                 		<div class="col-5 col-md-5 h-100 get-start-area">
 	                        <form class="form-inline h-100">
 	                            <input type="text" id="data" class="form-control keyvalue" placeholder="Enter Key">
-	                            <input type="button" class="submit" value="Clear" onclick="clearKey()">
+	                            <div class="input-group">
+                                    <span class="input-group-addon">FadeIn Delay</span>
+                                    <input id="fadein_delay" type="number" class="form-control" min="0" value="10">
+                                    <div class="input-group-append ms">
+                                        <span class="input-group-text">ms</span>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">FadeOut Delay</span>
+                                    <input id="fadeout_delay" type="number" class="form-control" min="0" value="10">
+                                    <div class="input-group-append ms">
+                                        <span class="input-group-text">ms</span>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">Brightness</span>
+                                    <input id="brightness" type="number" class="form-control" min="0" max="255" value="200">
+                                </div>
 	                        </form>
                     	</div>
                         <div class="col-2 col-md-2 h-100"></div>
@@ -55,9 +79,14 @@
                     	</div>
                 	</div>
                 	<div class="row h-25 align-items-center">
-                        <div class="col-12 col-md-12 h-100">
+                        <div class="col-5 col-md-5 h-100 save-cnt">
+                            <button id="save" class="form-control" onclick="addMacro()">Save</button>
+                        </div>
+                        <div class="col-2 col-md-2 h-100"></div>
+                        <div class="col-5 col-md-5 h-100">
                             <form class="form-inline h-100">
-                                <button id="start" class="form-control keyvalue">Join Cose Meravigliose</button>
+                                <button id="start" class="form-control ctrl">Start</button>
+                                <button id="stop" class="form-control ctrl" style="margin-left: 20%;">Stop</button>
                             </form>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 import eel
+import yaml
 import serial
 from serial import SerialException
 from win32gui import GetWindowText, GetForegroundWindow, IsWindowVisible, EnumWindows
@@ -6,6 +7,8 @@ from win32process import GetWindowThreadProcessId
 from psutil import Process
 from ntpath import basename
 
+config = {}
+macros = '';
 baudrate = 115200
 
 ser = serial.Serial(timeout=1)
@@ -84,10 +87,36 @@ def get_procs():
     EnumWindows(winEnumHandler, procs)
     return procs
 
-#print(get_serial_ports())
-#print(serial_write("COM3", 921600, "RGBadfgdfgsdfgsdfgsdfgsdgsdfgsdfgsdfgsd"))
-#print(get_foreground())
-#print(get_procs())
-#print(serial_begin("COM5"))
+@eel.expose
+def read_config():
+    global config, macros
+    with open('config.yml') as f:
+        docs = yaml.load_all(f, Loader=yaml.FullLoader)
+        for doc in docs:
+            for k, v in doc.items():
+                #print(k, v)
+                config.update({k : v})
+    print(config)
+    macros = config['Macros']
+    return config
+
+@eel.expose
+def write_config(macros):
+    with open('config.yml', 'w') as f:
+        data = yaml.dump(macros, f)
+
+@eel.expose
+def add_macro(name, key, fadein, fadeout, brightness, color):
+    new_macro = {}
+    new_macro['name'] = name.encode("utf-8")
+    new_macro['key'] = key.encode("utf-8")
+    new_macro['fadein'] = fadein
+    new_macro['fadeout'] = fadeout
+    new_macro['brightness'] = brightness
+    new_macro['color'] = color.encode("utf-8")
+    config['Macros'].append(new_macro)
+    with open('config.yml', 'w') as f:
+        data = yaml.dump(config, f)
+    return(config)
 
 eel.start('index.html', size=(1000, 600))

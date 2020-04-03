@@ -78,6 +78,7 @@ p {
 .action-cnt {
     background: #282828;
     height: calc(100% - 55px);
+    position: relative;
 }
 
 .action-row {
@@ -248,3 +249,69 @@ label {
     float: left;
 }
 
+.input-group-addon {
+    justify-content: center;
+    width: 50%;
+}
+
+.ms {
+    display: flex;
+    padding: 5px;
+    color: white;
+}
+
+.form-inline .input-group {
+    width: 100%;
+}
+
+.save-cnt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.save-cnt button {
+    width: 40%;
+}
+
+.ctrl {
+    width: 40%!important;
+}
+
+.serial-cnt {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin: auto;
+}
+
+.macros {
+    width: 100%;
+    max-height: calc(100% - 130px);
+    overflow: auto;
+}
+
+.macro-li {
+    padding: 5px;
+    background-image: linear-gradient(#3e3e3e, #191919);
+    color: white;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}

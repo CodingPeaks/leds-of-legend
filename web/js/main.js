@@ -1,9 +1,13 @@
 var last_key;
 var last_event;
+var macros;
 
-function bindKey(action) {
+function testKeyBind(action) {
     if(action == 'keydown'){
-        var cmd = '1;25;500;25';
+        var fadein_delay = document.getElementById('fadein_delay').value;
+        var fadeout_delay = document.getElementById('fadeout_delay').value;
+        var brightness = document.getElementById('brightness').value;
+        var cmd = '1;'+fadein_delay+';'+fadeout_delay+';'+brightness;
     } else if(action == 'keyup') {
         var cmd = '0';
     }
@@ -32,51 +36,57 @@ function serialPortStatus(status){
     console.log(status);
 }
 
-document.addEventListener('keydown', (event) => {
-    if(event.key != last_key || event.repeat == false) {
-        showKey('Pressed: ', event);
-        last_key = event.key;
-        last_event = event.type;
-    }
-});
-
-document.addEventListener('keyup', (event) => {
-    if(event.type != last_event) {
-        showKey('Released: ', event);
-        last_event = event.type;
-    }
-
-});
-
-
-function showKey(type, event){
- let text = type + event.code +
-    (event.shiftKey ? ' shiftKey' : '') +
-    (event.ctrlKey ? ' ctrlKey' : '') +
-    (event.altKey ? ' altKey' : '') +
-    (event.metaKey ? ' metaKey' : '') +
-    (event.repeat ? ' (repeat)' : '') +
-    "\n";
-    //console.log(event);
-    document.getElementById('data').value = text;
-    console.log('new key: '+event.key);
-    console.log('old key: '+last_key);
-    console.log('repeat: '+event.repeat);
-    console.log('\n');
-    
-    bindKey(event.type);
-    
+function addMacro(){
+    var name = document.getElementById('macro_name').value;
+    var key = document.getElementById('data').getAttribute('key');
+    var fadein = parseInt(document.getElementById('fadein_delay').value);
+    var fadeout = parseInt(document.getElementById('fadeout_delay').value);
+    var brightness = parseInt(document.getElementById('brightness').value);
+    var color = document.getElementById('rgb-color').innerText;
+    eel.add_macro(name, key, fadein, fadeout, brightness, color)(updateMacroList);
 }
 
-function clearKey() {
-    document.getElementById('data').value = '';
+function getMacroList(list){
+    macros = list['Macros'];
+    var rows = '';
+    for(i=0;i<macros.length;i++){
+        rows += '<div class="macro-li">'+macros[i]['name']+'</div>';
+    }
+    document.getElementById("macro-ul").innerHTML = rows;
 }
+
+function updateMacroList(){
+    eel.read_config()(getMacroList);
+}
+
+function showKey(event){
+    let text = 
+        (event.shiftKey ? ' shiftKey' : '') +
+        (event.ctrlKey ? ' ctrlKey' : '') +
+        (event.altKey ? ' altKey' : '') +
+        (event.metaKey ? ' metaKey' : '') +
+        (event.repeat ? ' (repeat)' : '') + ' ' + event.key.toUpperCase();
+        //console.log(event);
+        document.getElementById('data').value = text;
+}
+
+function selectKey() {
+    let text = 'Selected: '+
+        (event.shiftKey ? ' shiftKey' : '') +
+        (event.ctrlKey ? ' ctrlKey' : '') +
+        (event.altKey ? ' altKey' : '') +
+        (event.metaKey ? ' metaKey' : '') +
+        (event.repeat ? ' (repeat)' : ' ') + event.key.toUpperCase();
+        //console.log(event);
+        document.getElementById('data').value = text;
+        document.getElementById('data').setAttribute("key", event.code);
+}
+
 
 document.addEventListener('DOMContentLoaded', function(){ 
 
     eel.get_serial_ports()(listSerialPorts);
-    //eel.init_serial_port('COM5')(serialPortStatus);
-
+    eel.read_config()(getMacroList);
 
     var colorWheel = new iro.ColorPicker("#colorWheelDemo", {
         width: 270,
@@ -95,22 +105,31 @@ document.addEventListener('DOMContentLoaded', function(){
 
     colorWheel.on('input:change', function(color, changes){
       document.getElementById('color').style.backgroundColor = colorWheel.color.hexString;
-      document.getElementById('rgb-color').innerText = colorWheel.color.rgbString;
+      document.getElementById('rgb-color').innerText = colorWheel.color.hexString; //rgbString
     });
 
     document.getElementById('serial-port').addEventListener('change', function() {
         eel.serial_begin(this.value);
     });
 
-}, false);
+    document.getElementById('data').addEventListener('keydown', (event) => {
+        console.log(event);
+        event.preventDefault();
+        if(event.key != last_key || event.repeat == false) {
+            showKey(event);
+            testKeyBind(event.type);
+            last_key = event.key;
+            last_event = event.type;
+        }
+    });
 
-function IgnoreAlpha(e) {
-  if (!e) {
-    e = window.event;
-  }
-  if (e.keyCode >= 65 && e.keyCode <= 90) // A to Z
-  {
-    e.returnValue = false;
-    e.cancel = true;
-  }
-}
+    document.getElementById('data').addEventListener('keyup', (event) => {
+        if(event.type != last_event) {
+            selectKey(event);
+            testKeyBind(event.type);
+            last_event = event.type;
+        }
+
+    });
+
+}, false);
