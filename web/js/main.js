@@ -3,11 +3,11 @@ var last_event;
 
 function bindKey(action) {
     if(action == 'keydown'){
-        var cmd = '1;15;80;25';
+        var cmd = '1;25;500;25';
     } else if(action == 'keyup') {
         var cmd = '0';
     }
- eel.serial_write('COM10', 115200, cmd)(callBack)
+ eel.serial_write(cmd)(callBack)
 }
 
 function callBack() {
@@ -18,6 +18,7 @@ function listSerialPorts(ports) {
  console.log(ports);
  var options = '';
  if(ports.length > 0) {
+    options += '<option value="">Select port</option>';
     for(i=0; i<ports.length;i++){
         options += '<option value="' + ports[i] + '">' + ports[i] + '</option>';
     }
@@ -98,8 +99,18 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
     document.getElementById('serial-port').addEventListener('change', function() {
-        console.log(this.value);
-        //eel.init_serial_port(this.value)(serialPortStatus);
+        eel.serial_begin(this.value);
     });
 
 }, false);
+
+function IgnoreAlpha(e) {
+  if (!e) {
+    e = window.event;
+  }
+  if (e.keyCode >= 65 && e.keyCode <= 90) // A to Z
+  {
+    e.returnValue = false;
+    e.cancel = true;
+  }
+}
