@@ -6,11 +6,35 @@ from win32process import GetWindowThreadProcessId
 from psutil import Process
 from ntpath import basename
 
-port = "COM10"
 baudrate = 115200
-ser = serial.Serial(port, baudrate, timeout=0.01)
+
+ser = serial.Serial(timeout=1)
 
 eel.init('web')
+
+@eel.expose
+def serial_begin(port):
+    global ser
+    if not port == "":
+        if ser.isOpen():
+            ser.close();
+            print("Port successfully closed")
+        ser = serial.Serial(port, baudrate, timeout=0.01)
+        if ser.isOpen():
+            print("Port successfully opened")
+            return 1
+        else:
+            print("Port open error!")
+            return 0
+    else:
+    	if ser.isOpen():
+            ser.close();
+            if ser.isOpen():
+                print("Port close error!")
+                return 0
+            else:
+                print("Port successfully closed")
+                return 1    
 
 @eel.expose
 def get_serial_ports():
@@ -28,9 +52,15 @@ def get_serial_ports():
     return result
 
 @eel.expose
-def serial_write(port, baudrate, message):
-    print(message)
-    ser.write(message.encode('ascii')+'\r')
+def serial_write(message):
+    global ser
+    if ser.isOpen():
+        print("Sending message -> " + message)
+        ser.write(message.encode('ascii')+'\r')
+        return 1
+    else:
+        print("No serial port initialized")
+        return 0
 
 @eel.expose
 def get_foreground():
@@ -58,6 +88,6 @@ def get_procs():
 #print(serial_write("COM3", 921600, "RGBadfgdfgsdfgsdfgsdfgsdgsdfgsdfgsdfgsd"))
 #print(get_foreground())
 #print(get_procs())
-#init_serial_port("COM10")
+#print(serial_begin("COM5"))
 
 eel.start('index.html', size=(1000, 600))
