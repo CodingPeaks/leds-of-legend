@@ -5,21 +5,3 @@ Macros:
   fadeout: 50
   key: Q
   name: macro 1
-- brightness: 200
-  color: rgb(0,0,0)
-  fadein: 10
-  fadeout: 10
-  key: KeyW
-  name: macro 2
-- brightness: 200
-  color: rgb(0,0,0)
-  fadein: 20
-  fadeout: 10
-  key: KeyA
-  name: macro 3
-- brightness: 200
-  color: rgb(0,0,0)
-  fadein: 20
-  fadeout: 60
-  key: KeyW
-  name: Test
