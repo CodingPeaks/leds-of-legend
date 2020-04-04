@@ -128,6 +128,14 @@ label {
     margin: 0;
 }
 
+.bgimg {
+    position: absolute;
+    z-index: -1;
+    left: -80%;
+    bottom: -8%;
+    filter: blur(5px);
+}
+
 .align-items-center {
     text-align: center;
 }

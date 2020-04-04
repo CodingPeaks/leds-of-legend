@@ -43,7 +43,12 @@ function addMacro(){
     var fadeout = parseInt(document.getElementById('fadeout_delay').value);
     var brightness = parseInt(document.getElementById('brightness').value);
     var color = document.getElementById('rgb-color').innerText;
-    eel.add_macro(name, key, fadein, fadeout, brightness, color)(updateMacroList);
+    if(fadein && fadeout &&  brightness && key && name){
+    	eel.add_macro(name, key, fadein, fadeout, brightness, color)(updateMacroList);
+    	alert("Successfully saved");
+	}else{
+		alert("Please fill all forms before saving");
+	}
 }
 
 function getMacroList(list){
@@ -133,3 +138,14 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
 }, false);
+
+function IgnoreAlpha(e) {
+  if (!e) {
+    e = window.event;
+  }
+  if (e.keyCode >= 65 && e.keyCode <= 90) // A to Z
+  {
+    e.returnValue = false;
+    e.cancel = true;
+  }
+}
