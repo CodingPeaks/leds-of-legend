@@ -73,6 +73,7 @@ p {
     line-height: 50px;
     text-align: center;
     font-weight: bold;
+    border-radius: 7px 7px 0px 0px;
 }
 
 .action-cnt {
