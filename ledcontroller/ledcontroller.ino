@@ -1,17 +1,15 @@
-//#define Sprintln(a) (Serial.println(a))
-//#define Sprint(a) (Serial.print(a))
-#define Sprintln(a)
-#define Sprint(a)
+#define Sprintln(a) (Serial.println(a))
+#define Sprint(a) (Serial.print(a))
+//#define Sprintln(a)
+//#define Sprint(a)
 
-String sdata = ""; // Initialised to nothing.
-byte test, start;
-int fo;
-int s = 0;
-int in = 300;
-int out = 600;
-int b = 255;
-int fadeIn, fadeOut;
-
+String sdata = "";
+int fade = 10;
+int b = 0;
+int curb = 0;
+int curtime = 0;
+int test = 0;
+int state = 0;
 #define ledpin D3
 
 void setup (void) {
@@ -33,47 +31,37 @@ void loop() {
         String got = getValue(sdata, ';', i);
         switch (i) {
           case 0:
-            s = got.toInt();
-            Sprintln("s:" + got);
+            b = map(got.toInt(), 0, 100, 0, 255);
+            Sprint("b: (" + got + "%) ");
+            Sprintln(b);
+            curtime = micros();
             break;
           case 1:
-            in = got.toInt() * 10;
-            Sprint("i:");
-            Sprintln(got.toInt() * 10);
-            break;
-          case 2:
-            out = got.toInt() * 10;
-            Sprint("o:");
-            Sprintln(got.toInt() * 10);
-            break;
-          case 3:
-            b = got.toInt() * 10;
-            Sprint("b:");
-            Sprintln(got.toInt() * 10);
+            fade = got.toInt();
+            Sprint("f: ");
+            Sprintln(fade);
             break;
         }
         i++;
       } while (getValue(sdata, ';', i) != "");
 
-      fo = lightLed();
       sdata = "";
     }
   }
-  if (fo) {
 
-    int timediff = millis() - fo;
+  fadeTo();
 
-    if (s) {
-      fadeIn = map(timediff, 0, in, fadeOut, b);
-      if (fadeIn > 255) {
-        fadeIn = 255;
-      }
-      analogWrite(ledpin, fadeIn);
-    } else {
-      fadeOut = map(timediff, 0, out, fadeIn, 0);
-      analogWrite(ledpin, fadeOut);
+}
+
+void fadeTo() {
+  if (micros() - curtime > fade) {
+    if (state < b) {
+      state++;
+    } else if (state > b) {
+      state--;
     }
-
+    analogWrite(ledpin, state);
+    curtime = micros();
   }
 }
 
@@ -91,9 +79,4 @@ String getValue(String dat, char separator, int index)
     }
   }
   return found > index ? dat.substring(strIndex[0], strIndex[1]) : "";
-}
-
-int lightLed() {
-  analogWrite(ledpin, s * b);
-  return millis();
 }
