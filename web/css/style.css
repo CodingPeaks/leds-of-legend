@@ -64,6 +64,32 @@ p {
   100% { background-position: -200% 0; }
 }
 
+.nobr {
+	color: white;
+	text-align: center;
+	background: #191919;
+    border: 1px solid #9572e8;
+    border-left: 2px solid #9572e8;
+    border-right: none;
+}
+
+.noblbr {
+	color: white;
+	text-align: center;
+    background: #232323;
+    border: 1px solid #9572e8;
+    border-left: none;
+    border-right: none;
+}
+
+.nobl {
+	color: white;
+	text-align: center;
+	background: #191919 !important;
+    border: 1px solid #9572e8;
+    border-left: none;
+}
+
 .action-header {
     height: 50px;
     width: 100%;
@@ -297,6 +323,12 @@ label {
     width: 40%;
 }
 
+.botbtn {
+	background: #191919;
+	border: 1px solid #9572e8;
+	color: white;
+}
+
 .ctrl {
     width: 40%!important;
 }
@@ -312,6 +344,11 @@ label {
     width: 100%;
     max-height: calc(100% - 130px);
     overflow: auto;
+}
+
+#macro_name {
+	background: #191919;
+	border: 1px solid #9572e8;
 }
 
 .macro-li {
