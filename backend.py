@@ -25,6 +25,7 @@ def serial_begin(port):
         ser = serial.Serial(port, baudrate, timeout=0.01)
         if ser.isOpen():
             print("Port successfully opened")
+            set_serial_port(port)
             return 1
         else:
             print("Port open error!")
@@ -118,5 +119,30 @@ def add_macro(name, key, fadein, fadeout, brightness, color):
     with open('config.yml', 'w') as f:
         data = yaml.dump(config, f)
     return(config)
+
+@eel.expose
+def delete_macro(macro_name):
+    name = macro_name.encode("utf-8")
+    for macro in config['Macros']:
+        if macro['name'] == name:
+            index = config['Macros'].index(macro)
+            config['Macros'].pop(index)
+            print(config['Macros'])
+    with open('config.yml', 'w') as f:
+        data = yaml.dump(config, f)
+    return(config)
+
+@eel.expose
+def set_serial_port(port):
+    config['Serial']['Port'] = port.encode("utf-8")
+    with open('config.yml', 'w') as f:
+        data = yaml.dump(config, f)
+
+@eel.expose
+def get_serial_port():
+    read_config()
+    print(config['Serial']['Port'])
+    return config['Serial']['Port']
+
 
 eel.start('index.html', size=(1000, 600))

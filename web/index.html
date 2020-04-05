@@ -7,11 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Leds of Legends</title>
+    <link href="css/all.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <script type="text/javascript" src="/eel.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <script src="js/iro.js"></script>
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -19,35 +20,36 @@
         <div class="container-fluid h-100">
             <div class="animated-gradient"></div>
             <div class="row h-100 align-items-center">
-                <div id="sidebar" class="col-3 col-md h-100">
+                <img src="../img/bg-img/background.jpg" class="bgimg">
+                <div id="sidebar" class="col-3 col-md-3 h-100">
                     <div class="action-header">MACRO</div>
                     <div class="action-cnt">
-                    	<div class="action-row"><button id="new-action" class="btn">New</button></div>
+                    	<div class="action-row"><button id="new-action" class="btn action-btn">New</button></div>
                         <div id="macro-ul" class="macros">
                             
                         </div>
                         <div class="form-group serial-cnt">
                             <label for="serial-port">Serial Port</label>
-                            <select class="form-control" id="serial-port" onkeydown="IgnoreAlpha(event);">
+                            <select class="form-control botbtn" id="serial-port" onkeydown="IgnoreAlpha(event);">
                             </select>
                         </div>
                     </div>
                 </div>
-                <div id="particles" class="col-9 col-md h-100">
-                    <img src="../img/bg-img/background.jpg" class="bgimg">
+
+                <div id="homepage" class="col-9 col-md h-100 dynamic-cnt">
+                    home
+                </div>
+
+                <div id="new-macro-cnt" class="col-9 col-md h-100 dynamic-cnt">
                 	<div class="row h-25 align-items-center">
-                        <div class="col-5 col-md-5 h-100">
-                    		<div class="form-group">
-                                <label for="macro_name">Macro Name</label>
-                                <input id="macro_name" type="text" class="form-control" placeholder="Default">
+                        <div class="col-5 col-md-5 h-100 d-flex">
+                    		<div class="form-group" style="width:100%;">
+                                <input id="macro_name" type="text" class="form-control" placeholder="Macro name">
                             </div>
                         </div>
                         <div class="col-2 col-md-2 h-100 align-items-center"></div>
-                        <div class="col-5 col-md-5 h-100 align-items-center">
-                            <p>Selected color</p>
-                            <div id="color"></div>
-                            <br>
-                            <span id="rgb-color" style="color: white;">rgb(0,0,0)</span>
+                        <div class="col-5 col-md-5 h-100 align-items-center d-flex">
+                            <div id="color" class="botbtn d-flex"></div>
                         </div>
                 	</div>
                 	<div class="row h-50 align-items-center">
@@ -55,46 +57,45 @@
 	                        <form class="form-inline h-100">
 	                            <input type="text" id="data" class="form-control keyvalue" placeholder="Enter Key">
 	                            <div class="input-group">
-                                    <span class="input-group-addon">FadeIn Delay</span>
-                                    <input id="fadein_delay" type="number" class="form-control" min="0" value="10">
-                                    <div class="input-group-append ms">
+                                    <span class="input-group-addon nobr">FadeIn Delay</span>
+                                    <input id="fadein_delay" type="number" class="form-control noblbr" min="0" value="10">
+                                    <div class="input-group-append ms nobl">
                                         <span class="input-group-text">ms</span>
                                     </div>
                                 </div>
                                 <div class="input-group">
-                                    <span class="input-group-addon">FadeOut Delay</span>
-                                    <input id="fadeout_delay" type="number" class="form-control" min="0" value="10">
-                                    <div class="input-group-append ms">
+                                    <span class="input-group-addon nobr">FadeOut Delay</span>
+                                    <input id="fadeout_delay" type="number" class="form-control noblbr" min="0" value="10">
+                                    <div class="input-group-append ms nobl">
                                         <span class="input-group-text">ms</span>
                                     </div>
                                 </div>
                                 <div class="input-group">
-                                    <span class="input-group-addon">Brightness</span>
-                                    <input id="brightness" type="number" class="form-control" min="0" max="255" value="200">
-                                    <div class="input-group-append ms">
+                                    <span class="input-group-addon nobr">Brightness</span>
+                                    <input id="brightness" type="number" class="form-control noblbr" min="0" max="255" value="100">
+                                    <div class="input-group-append ms nobl">
                                     <span class="input-group-text">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                     </div>
                                 </div>
 	                        </form>
                     	</div>
                         <div class="col-2 col-md-2 h-100"></div>
-                    	<div class="col-5 col-md-5 h-100 align-items-center">
+                    	<div class="col-5 col-md-5 h-100 align-items-center d-flex">
                     		<div class="wheel" id="colorWheelDemo"></div>
                     	</div>
                 	</div>
                 	<div class="row h-25 align-items-center">
                         <div class="col-5 col-md-5 h-100 save-cnt">
-                            <button id="save" class="form-control" onclick="addMacro()">Save</button>
+                            <button id="save" class="form-control botbtn" onclick="addMacro()">Save</button>
                         </div>
                         <div class="col-2 col-md-2 h-100"></div>
                         <div class="col-5 col-md-5 h-100">
                             <form class="form-inline h-100">
-                                <button id="start" class="form-control ctrl">Start</button>
-                                <button id="stop" class="form-control ctrl" style="margin-left: 20%;">Stop</button>
+                                <button id="start" class="form-control ctrl botbtn">Start</button>
+                                <button id="stop" class="form-control ctrl botbtn" style="margin-left: 20%;">Stop</button>
                             </form>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>

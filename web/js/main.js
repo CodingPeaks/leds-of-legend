@@ -5,11 +5,11 @@ var macros;
 function testKeyBind(action) {
     if(action == 'keydown'){
         var fadein_delay = document.getElementById('fadein_delay').value;
-        var fadeout_delay = document.getElementById('fadeout_delay').value;
         var brightness = document.getElementById('brightness').value;
-        var cmd = '1;'+fadein_delay+';'+fadeout_delay+';'+brightness;
+        var cmd = brightness+';'+fadein_delay;
     } else if(action == 'keyup') {
-        var cmd = '0';
+        var fadeout_delay = document.getElementById('fadeout_delay').value;
+        var cmd = '0;'+fadeout_delay;
     }
  eel.serial_write(cmd)(callBack)
 }
@@ -36,26 +36,38 @@ function serialPortStatus(status){
     console.log(status);
 }
 
+function getSerialPort(){
+    eel.get_serial_port()(initSerialPort);
+}
+
+function initSerialPort(port){
+    eel.serial_begin(port);
+}
+
 function addMacro(){
     var name = document.getElementById('macro_name').value;
     var key = document.getElementById('data').getAttribute('key');
     var fadein = parseInt(document.getElementById('fadein_delay').value);
     var fadeout = parseInt(document.getElementById('fadeout_delay').value);
     var brightness = parseInt(document.getElementById('brightness').value);
-    var color = document.getElementById('rgb-color').innerText;
+    var color = document.getElementById('color').innerText;
     if(fadein && fadeout &&  brightness && key && name){
     	eel.add_macro(name, key, fadein, fadeout, brightness, color)(updateMacroList);
-    	alert("Successfully saved");
+    	//alert("Successfully saved");
 	}else{
 		alert("Please fill all forms before saving");
 	}
+}
+
+function deleteMacro(macro_name){
+    eel.delete_macro(macro_name)(updateMacroList);
 }
 
 function getMacroList(list){
     macros = list['Macros'];
     var rows = '';
     for(i=0;i<macros.length;i++){
-        rows += '<div class="macro-li">'+macros[i]['name']+'</div>';
+        rows += '<div class="macro-li">'+macros[i]['name']+'<i title="Delete" onclick="deleteMacro(\''+macros[i]['name']+'\')" class="fas fa-trash-alt macro-i" style="right:5px;"></i></div>';
     }
     document.getElementById("macro-ul").innerHTML = rows;
 }
@@ -92,9 +104,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
     eel.get_serial_ports()(listSerialPorts);
     eel.read_config()(getMacroList);
+    getSerialPort();
 
     var colorWheel = new iro.ColorPicker("#colorWheelDemo", {
-        width: 270,
+        width: 230,
         layout: [
         { 
           component: iro.ui.Wheel,
@@ -109,8 +122,13 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
     colorWheel.on('input:change', function(color, changes){
-      document.getElementById('color').style.backgroundColor = colorWheel.color.hexString;
-      document.getElementById('rgb-color').innerText = colorWheel.color.hexString; //rgbString
+        document.getElementById('color').style.backgroundColor = color.hexString;
+        document.getElementById('color').innerText = color.hexString;
+    });
+
+    colorWheel.on('color:init', function(color){     
+        document.getElementById('color').style.backgroundColor = color.hexString;
+        document.getElementById('color').innerText = color.hexString;
     });
 
     document.getElementById('serial-port').addEventListener('change', function() {
@@ -134,7 +152,32 @@ document.addEventListener('DOMContentLoaded', function(){
             testKeyBind(event.type);
             last_event = event.type;
         }
+    });
 
+    $(document).on('mouseover','.macro-li', function(){
+        var buttons = $(this).find('.macro-i');
+        console.log(buttons);
+        $(buttons).each(function(i, btn) {
+            $(btn).fadeIn(100);
+        });
+    });
+
+    $(document).on('mouseout','.macro-li', function(){
+        var buttons = $(this).find('.macro-i');
+        console.log(buttons);
+        $(buttons).each(function(i, btn) {
+            $(btn).fadeOut(100);
+        });
+    });
+
+    document.getElementById('new-action').addEventListener('click', function() {
+        $('.dynamic-cnt').fadeOut(100);
+        $('#new-macro-cnt').fadeIn(200);
+    });
+
+    document.getElementById('save').addEventListener('click', function() {
+        $('.dynamic-cnt').fadeOut(100);
+        $('#homepage').fadeIn(200);
     });
 
 }, false);
