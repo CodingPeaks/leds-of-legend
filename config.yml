@@ -1,43 +1,60 @@
 Macros:
-- brightness: 70
-  color: '#fff0cf'
+- brightness: 100
+  color: '#ffffff'
+  fadein: 10
+  fadeout: 10
+  key: KeyA
+  keycode: 97
+  name: unicodetest
+- brightness: 100
+  color: '#ffffff'
+  fadein: 25
+  fadeout: 25
+  key: KeyB
+  keycode: 98
+  name: B
+- brightness: 100
+  color: '#ffffff'
+  fadein: 60
+  fadeout: 60
+  key: KeyL
+  keycode: 108
+  name: L
+- brightness: 100
+  color: '#ffffff'
+  fadein: 500
+  fadeout: 500
+  key: KeyS
+  keycode: 115
+  name: S
+- brightness: 100
+  color: '#ffffff'
   fadein: 1000
-  fadeout: 100000
-  key: KeyS
-  name: Test 1
+  fadeout: 1000
+  key: KeyZ
+  keycode: 122
+  name: z
+- brightness: 100
+  color: '#ffffff'
+  fadein: 700
+  fadeout: 7000
+  key: KeyX
+  keycode: 120
+  name: X
 - brightness: 100
   color: '#ffffff'
   fadein: 10
   fadeout: 10
-  key: KeyS
-  name: sda
+  key: KeyH
+  keycode: 104
+  name: eqwsdwed
 - brightness: 100
-  color: '#ffffff'
-  fadein: 10
-  fadeout: 10
-  key: KeyQ
-  name: sdasd
-- brightness: 100
-  color: '#ffffff'
-  fadein: 10
-  fadeout: 10
-  key: KeyN
-  keycode: 78
+  color: '#ff0019'
+  fadein: 1000
+  fadeout: 1000
+  key: KeyR
+  keycode: 114
   name: pippo
-- brightness: 100
-  color: '#ffffff'
-  fadein: 10
-  fadeout: 10
-  key: KeyN
-  keycode: 78
-  name: wefwerfwef
-- brightness: 100
-  color: '#ffffff'
-  fadein: 10
-  fadeout: 10
-  key: KeyC
-  keycode: 67
-  name: dioporco
 Serial:
   BaudRate: 115200
-  Port: COM10
+  Port: COM5

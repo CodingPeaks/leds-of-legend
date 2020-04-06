@@ -1,17 +1,26 @@
 var last_key;
 var last_event;
 var macros;
+var colorWheel;
 
 function startKeyLogger(){
-    eel.start_kl();
+    eel.start_kl()( function(){
+        $('#start_kl').addClass('disabled-btn');
+        $('#stop_kl').removeClass('disabled-btn');
+        $('.animated-gradient').fadeIn(200);
+    });
 }
 
 function stopKeyLogger(){
-    eel.stop_kl();
+    eel.stop_kl()( function(){
+        $('#stop_kl').addClass('disabled-btn');
+        $('#start_kl').removeClass('disabled-btn');
+        $('.animated-gradient').fadeOut(200);
+    });
 }
 
 function testKeyBind(action) {
-    if(action == 'keydown'){
+    if(action == 'keypress'){
         var fadein_delay = document.getElementById('fadein_delay').value;
         var brightness = document.getElementById('brightness').value;
         var cmd = brightness+';'+fadein_delay;
@@ -30,7 +39,7 @@ function listSerialPorts(ports) {
  console.log(ports);
  var options = '';
  if(ports.length > 0) {
-    options += '<option value="">Select port</option>';
+    options += '<option value="">Select serial port</option>';
     for(i=0; i<ports.length;i++){
         options += '<option value="' + ports[i] + '">' + ports[i] + '</option>';
     }
@@ -60,6 +69,7 @@ function addMacro(){
     var fadeout = parseInt(document.getElementById('fadeout_delay').value);
     var brightness = parseInt(document.getElementById('brightness').value);
     var color = document.getElementById('color').innerText;
+    $('#new-macro-cnt .form-control').val('');
     if(fadein && fadeout &&  brightness && key && name){
     	eel.add_macro(name, key, keycode, fadein, fadeout, brightness, color)(updateMacroList);
     	//alert("Successfully saved");
@@ -72,11 +82,33 @@ function deleteMacro(macro_name){
     eel.delete_macro(macro_name)(updateMacroList);
 }
 
+function editMacro(macro){
+    var name = $(macro).attr('mname');
+    var key = $(macro).attr('mkey');
+    var brightness = $(macro).attr('mbrightness');
+    var color = $(macro).attr('mcolor');
+    var keycode = $(macro).attr('mkeycode');
+    var fadein = $(macro).attr('mfadein');
+    var fadeout = $(macro).attr('mfadeout');
+
+    $('#macro_name').val(name);
+    $('#data').val(key);
+    $('#data').attr('keycode', keycode);
+    $('#fadein_delay').val(fadein);
+    $('#fadeout_delay').val(fadeout);
+    $('#brightness').val(brightness);
+    colorWheel.color.hexString = color;
+
+    $('.dynamic-cnt').fadeOut(100);
+    $('#new-macro-cnt').fadeIn(200);
+
+}
+
 function getMacroList(list){
     macros = list['Macros'];
     var rows = '';
     for(i=0;i<macros.length;i++){
-        rows += '<div class="macro-li">'+macros[i]['name']+'<i title="Delete" onclick="deleteMacro(\''+macros[i]['name']+'\')" class="fas fa-trash-alt macro-i" style="right:5px;"></i></div>';
+        rows += '<div class="macro-li" mname='+macros[i]['name']+' mkey='+macros[i]['key']+' mbrightness='+macros[i]['brightness']+' mcolor='+macros[i]['color']+' mkeycode='+macros[i]['keycode']+' mfadein='+macros[i]['fadein']+' mfadeout='+macros[i]['fadeout']+'>'+macros[i]['name']+'<i title="Delete" onclick="deleteMacro(\''+macros[i]['name']+'\')" class="fas fa-trash-alt macro-i" style="right:5px;"></i></div>';
     }
     document.getElementById("macro-ul").innerHTML = rows;
 }
@@ -121,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function(){
     eel.read_config()(getMacroList);
     getSerialPort();
 
-    var colorWheel = new iro.ColorPicker("#colorWheelDemo", {
+    colorWheel = new iro.ColorPicker("#colorWheelDemo", {
         width: 230,
         layout: [
         { 
@@ -146,15 +178,20 @@ document.addEventListener('DOMContentLoaded', function(){
         document.getElementById('color').innerText = color.hexString;
     });
 
+    colorWheel.on('color:change', function(color){     
+        document.getElementById('color').style.backgroundColor = color.hexString;
+        document.getElementById('color').innerText = color.hexString;
+    });
+
     document.getElementById('serial-port').addEventListener('change', function() {
         eel.serial_begin(this.value);
     });
 
-    document.getElementById('data').addEventListener('keydown', (event) => {
+    document.getElementById('data').addEventListener('keypress', (event) => {
         console.log(event);
         event.preventDefault();
-        if(event.key != last_key || event.repeat == false) {
-            showKey(event);
+        if(event.key != last_key) {
+            selectKey(event);
             testKeyBind(event.type);
             last_key = event.key;
             last_event = event.type;
@@ -163,7 +200,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
     document.getElementById('data').addEventListener('keyup', (event) => {
         if(event.type != last_event) {
-            selectKey(event);
             testKeyBind(event.type);
             last_event = event.type;
         }
@@ -185,7 +221,12 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     });
 
+    $(document).on('click','.macro-li', function(){
+        editMacro(this);
+    });
+
     document.getElementById('new-action').addEventListener('click', function() {
+        $('#new-macro-cnt .form-control').val('');
         $('.dynamic-cnt').fadeOut(100);
         $('#new-macro-cnt').fadeIn(200);
     });

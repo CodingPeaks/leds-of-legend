@@ -12,9 +12,6 @@ from psutil import Process
 from ntpath import basename
 
 config = {}
-macros = '';
-baudrate = 115200
-kl = 0
 lis = 0
 
 ser = serial.Serial(timeout=1)
@@ -28,7 +25,7 @@ def serial_begin(port):
         if ser.isOpen():
             ser.close();
             print("Port successfully closed")
-        ser = serial.Serial(port, baudrate, timeout=0.01)
+        ser = serial.Serial(port, config['Serial']['BaudRate'], timeout=0.01)
         if ser.isOpen():
             print("Port successfully opened")
             set_serial_port(port)
@@ -96,21 +93,20 @@ def get_procs():
 
 @eel.expose
 def read_config():
-    global config, macros
+    global config
     with open('config.yml') as f:
         docs = yaml.load_all(f, Loader=yaml.FullLoader)
         for doc in docs:
             for k, v in doc.items():
                 #print(k, v)
                 config.update({k : v})
-    print(config)
-    macros = config['Macros']
+    #print(config)
     return config
 
 @eel.expose
-def write_config(macros):
+def write_config():
     with open('config.yml', 'w') as f:
-        data = yaml.dump(macros, f)
+        data = yaml.dump(config, f)
 
 @eel.expose
 def add_macro(name, key, keycode, fadein, fadeout, brightness, color):
@@ -122,9 +118,12 @@ def add_macro(name, key, keycode, fadein, fadeout, brightness, color):
     new_macro['fadeout'] = fadeout
     new_macro['brightness'] = brightness
     new_macro['color'] = color.encode("utf-8")
+    if config['Macros'] is None:
+        config['Macros'] = list()
     config['Macros'].append(new_macro)
     with open('config.yml', 'w') as f:
         data = yaml.dump(config, f)
+    read_config()
     return(config)
 
 @eel.expose
@@ -154,6 +153,7 @@ def get_serial_port():
 @eel.expose
 def start_kl():
     global lis
+    read_config()
     lis = keyboard.Listener(on_press=on_press, on_release=on_release)
     lis.start()	
 
@@ -165,15 +165,34 @@ def stop_kl():
 def on_press(key):
     try:
         k = key.char  # single-char keys
+        code = ord(getattr(key, 'char', '0'))
+        print(code)
+        for macro in config['Macros']:
+            if macro['keycode'] == code:
+                brightness = macro['brightness']
+                delay = macro['fadein']
+                msg = '%s;%s' % (brightness, delay)
+                serial_write(msg)
+
     except:
         k = key.name  # other keys
+        print('special')
     print('Key pressed: ' + k)
 
 def on_release(key):
     try:
         k = key.char  # single-char keys
+        code = ord(getattr(key, 'char', '0'))
+        print(code)
+        for macro in config['Macros']:
+            if macro['keycode'] == code:
+                brightness = 0
+                delay = macro['fadeout']
+                msg = '%s;%s' % (brightness, delay)
+                serial_write(msg)
     except:
         k = key.name  # other keys
+        print('special')
     print('Key released: ' + k)
 
 try:

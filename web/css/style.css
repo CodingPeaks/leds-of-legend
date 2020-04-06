@@ -49,14 +49,18 @@ p {
 }
 
 .animated-gradient {
-  background: repeating-linear-gradient(to right, red 0%, blue 50%, green 100%);
-  width: 100%;
-  height: 5px;
-  background-size: 200% auto;
-  background-position: 0 100%;
-  animation: gradient 2s infinite;
-  animation-fill-mode: forwards;
-  animation-timing-function: linear;
+    background: repeating-linear-gradient(to right, red 0%, blue 50%, green 100%);
+    width: 100%;
+    height: 4%;
+    background-size: 200% auto;
+    background-position: 0 100%;
+    animation: gradient 2s infinite;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+    color: white;
+    cursor: pointer;
+    display: none;
+    text-align: center;
 }
 
 @keyframes gradient { 
@@ -335,13 +339,23 @@ label {
 .ctrl {
     width: 40%!important;
     cursor: pointer;
+    height: 10%;
+}
+
+.ctrl i {
+    margin-left: 10px;
 }
 
 .serial-cnt {
     position: absolute;
-    bottom: 0;
+    bottom: 4%;
     width: 100%;
     margin: auto;
+    padding: 0 9px;
+}
+
+#serial-port option {
+    color: black;
 }
 
 .macros {
@@ -409,4 +423,15 @@ label {
 
 .form-group {
     margin: 0;
+}
+
+.disabled-btn {  
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.form-control:focus {
+    background: transparent;
+    border: 1px solid #9572e8;
+    color: white;
 }
