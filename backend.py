@@ -4,6 +4,7 @@ import serial
 import threading
 import time
 import keyboard
+from pynput import keyboard
 from serial import SerialException
 from win32gui import GetWindowText, GetForegroundWindow, IsWindowVisible, EnumWindows
 from win32process import GetWindowThreadProcessId
@@ -111,10 +112,11 @@ def write_config(macros):
         data = yaml.dump(macros, f)
 
 @eel.expose
-def add_macro(name, key, fadein, fadeout, brightness, color):
+def add_macro(name, key, keycode, fadein, fadeout, brightness, color):
     new_macro = {}
     new_macro['name'] = name.encode("utf-8")
     new_macro['key'] = key.encode("utf-8")
+    new_macro['keycode'] = keycode
     new_macro['fadein'] = fadein
     new_macro['fadeout'] = fadeout
     new_macro['brightness'] = brightness
@@ -150,16 +152,13 @@ def get_serial_port():
 
 @eel.expose
 def start_kl():
-    global kl
-    if kl != 1:
-       kl = 1
-       keylog()	
+	global lis
+	lis.start()	
 
 @eel.expose
 def stop_kl():
-    global kl
-    if kl != 0:
-       kl = 0
+    global lis
+    lis.stop()	
 
 def keylog():
     global kl
@@ -167,4 +166,26 @@ def keylog():
     	print keyboard.read_key()
         threading.Timer(0.01, keylog).start()
 
-eel.start('index.html', size=(1000, 600))
+def on_press(key):
+    try:
+        k = key.char  # single-char keys
+    except:
+        k = key.name  # other keys
+    print('Key pressed: ' + k)
+
+def on_release(key):
+    try:
+        k = key.char  # single-char keys
+    except:
+        k = key.name  # other keys
+    print('Key released: ' + k)
+
+
+lis = keyboard.Listener(on_press=on_press, on_release=on_release)
+
+try:
+	eel.start('index.html', size=(1000, 600))
+except (SystemExit, MemoryError, KeyboardInterrupt):
+    pass 
+
+print ('This is printed when the window is closed!')

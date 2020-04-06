@@ -24,6 +24,20 @@ Macros:
   key: KeyN
   keycode: 78
   name: pippo
+- brightness: 100
+  color: '#ffffff'
+  fadein: 10
+  fadeout: 10
+  key: KeyN
+  keycode: 78
+  name: wefwerfwef
+- brightness: 100
+  color: '#ffffff'
+  fadein: 10
+  fadeout: 10
+  key: KeyC
+  keycode: 67
+  name: dioporco
 Serial:
   BaudRate: 115200
   Port: COM5
