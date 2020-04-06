@@ -151,19 +151,20 @@ def get_serial_port():
 @eel.expose
 def start_kl():
     global kl
-    kl = 1
-    keylog()	
+    if kl != 1:
+       kl = 1
+       keylog()	
 
 @eel.expose
 def stop_kl():
     global kl
-    kl = 0	
+    if kl != 0:
+       kl = 0
 
 def keylog():
     global kl
-    print keyboard.read_key()
     if kl == 1:
+    	print keyboard.read_key()
         threading.Timer(0.01, keylog).start()
 
 eel.start('index.html', size=(1000, 600))
-

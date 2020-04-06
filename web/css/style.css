@@ -322,7 +322,8 @@ label {
 }
 
 .save-cnt button {
-    width: 40%;
+    width: 100%;
+    cursor: pointer;
 }
 
 .botbtn {
@@ -333,6 +334,7 @@ label {
 
 .ctrl {
     width: 40%!important;
+    cursor: pointer;
 }
 
 .serial-cnt {

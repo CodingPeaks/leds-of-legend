@@ -37,7 +37,14 @@
                 </div>
 
                 <div id="homepage" class="col-9 col-md h-100 dynamic-cnt">
-                    home
+                    <div class="row h-100 align-items-center d-flex">
+                        <div class="col-5 col-md-5 h-100">
+                            <form action="javascript:void(0);" class="form-inline h-100">
+                                <button id="start_kl" class="form-control ctrl botbtn" onclick="startKeyLogger()">Start</button>
+                                <button id="stop_kl" class="form-control ctrl botbtn" onclick="stopKeyLogger()" style="margin-left: 20%;">Stop</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="new-macro-cnt" class="col-9 col-md h-100 dynamic-cnt">
@@ -85,16 +92,14 @@
                     	</div>
                 	</div>
                 	<div class="row h-25 align-items-center">
-                        <div class="col-5 col-md-5 h-100 save-cnt">
+                        <div class="col-2 col-md-2 h-100 save-cnt">
                             <button id="save" class="form-control botbtn" onclick="addMacro()">Save</button>
                         </div>
-                        <div class="col-2 col-md-2 h-100"></div>
-                        <div class="col-5 col-md-5 h-100">
-                            <form class="form-inline h-100">
-                                <button id="start" class="form-control ctrl botbtn">Start</button>
-                                <button id="stop" class="form-control ctrl botbtn" style="margin-left: 20%;">Stop</button>
-                            </form>
+                        <div class="col-1 col-md-1 h-100 save-cnt"></div>
+                        <div class="col-2 col-md-2 h-100 save-cnt">
+                            <button id="cancel" class="form-control botbtn" onclick="goToHome()">Cancel</button>
                         </div>
+                        <div class="col-7 col-md-7 h-100"></div>
                     </div>
                 </div>
             </div>

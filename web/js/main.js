@@ -2,6 +2,14 @@ var last_key;
 var last_event;
 var macros;
 
+function startKeyLogger(){
+    eel.start_kl();
+}
+
+function stopKeyLogger(){
+    eel.stop_kl();
+}
+
 function testKeyBind(action) {
     if(action == 'keydown'){
         var fadein_delay = document.getElementById('fadein_delay').value;
@@ -47,12 +55,13 @@ function initSerialPort(port){
 function addMacro(){
     var name = document.getElementById('macro_name').value;
     var key = document.getElementById('data').getAttribute('key');
+    var keycode = parseInt(document.getElementById('data').getAttribute('keycode'));
     var fadein = parseInt(document.getElementById('fadein_delay').value);
     var fadeout = parseInt(document.getElementById('fadeout_delay').value);
     var brightness = parseInt(document.getElementById('brightness').value);
     var color = document.getElementById('color').innerText;
     if(fadein && fadeout &&  brightness && key && name){
-    	eel.add_macro(name, key, fadein, fadeout, brightness, color)(updateMacroList);
+    	eel.add_macro(name, key, keycode, fadein, fadeout, brightness, color)(updateMacroList);
     	//alert("Successfully saved");
 	}else{
 		alert("Please fill all forms before saving");
@@ -76,6 +85,11 @@ function updateMacroList(){
     eel.read_config()(getMacroList);
 }
 
+function goToHome(){
+    $('.dynamic-cnt').fadeOut(100);
+    $('#homepage').fadeIn(200);
+}
+
 function showKey(event){
     let text = 
         (event.shiftKey ? ' shiftKey' : '') +
@@ -97,6 +111,7 @@ function selectKey() {
         //console.log(event);
         document.getElementById('data').value = text;
         document.getElementById('data').setAttribute("key", event.code);
+        document.getElementById('data').setAttribute("keycode", event.keyCode);
 }
 
 

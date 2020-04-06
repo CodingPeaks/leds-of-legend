@@ -17,6 +17,13 @@ Macros:
   fadeout: 10
   key: KeyQ
   name: sdasd
+- brightness: 100
+  color: '#ffffff'
+  fadein: 10
+  fadeout: 10
+  key: KeyN
+  keycode: 78
+  name: pippo
 Serial:
   BaudRate: 115200
-  Port: COM10
+  Port: COM5
