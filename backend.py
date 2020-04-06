@@ -1,6 +1,9 @@
 import eel
 import yaml
 import serial
+import threading
+import time
+import keyboard
 from serial import SerialException
 from win32gui import GetWindowText, GetForegroundWindow, IsWindowVisible, EnumWindows
 from win32process import GetWindowThreadProcessId
@@ -10,6 +13,7 @@ from ntpath import basename
 config = {}
 macros = '';
 baudrate = 115200
+kl = 0
 
 ser = serial.Serial(timeout=1)
 
@@ -144,5 +148,22 @@ def get_serial_port():
     print(config['Serial']['Port'])
     return config['Serial']['Port']
 
+@eel.expose
+def start_kl():
+    global kl
+    kl = 1
+    keylog()	
+
+@eel.expose
+def stop_kl():
+    global kl
+    kl = 0	
+
+def keylog():
+    global kl
+    print keyboard.read_key()
+    if kl == 1:
+        threading.Timer(0.01, keylog).start()
 
 eel.start('index.html', size=(1000, 600))
+

@@ -1,28 +1,22 @@
 Macros:
+- brightness: 70
+  color: '#fff0cf'
+  fadein: 1000
+  fadeout: 100000
+  key: KeyS
+  name: Test 1
 - brightness: 100
-  color: FF0000
-  fadein: 50
-  fadeout: 50
-  key: Q
-  name: macro 1
-- brightness: 200
-  color: rgb(0,0,0)
-  fadein: 10
-  fadeout: 10
-  key: KeyL
-  name: ciao
-- brightness: 200
-  color: '#ffffff'
-  fadein: 10
-  fadeout: 10
-  key: KeyN
-  name: sdfgsdfg
-- brightness: 200
   color: '#ffffff'
   fadein: 10
   fadeout: 10
   key: KeyS
-  name: ewrfwef
+  name: sda
+- brightness: 100
+  color: '#ffffff'
+  fadein: 10
+  fadeout: 10
+  key: KeyQ
+  name: sdasd
 Serial:
   BaudRate: 115200
-  Port: COM5
+  Port: COM10
