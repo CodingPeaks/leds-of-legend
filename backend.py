@@ -15,6 +15,7 @@ config = {}
 macros = '';
 baudrate = 115200
 kl = 0
+lis = 0
 
 ser = serial.Serial(timeout=1)
 
@@ -152,19 +153,14 @@ def get_serial_port():
 
 @eel.expose
 def start_kl():
-	global lis
-	lis.start()	
+    global lis
+    lis = keyboard.Listener(on_press=on_press, on_release=on_release)
+    lis.start()	
 
 @eel.expose
 def stop_kl():
     global lis
     lis.stop()	
-
-def keylog():
-    global kl
-    if kl == 1:
-    	print keyboard.read_key()
-        threading.Timer(0.01, keylog).start()
 
 def on_press(key):
     try:
@@ -179,9 +175,6 @@ def on_release(key):
     except:
         k = key.name  # other keys
     print('Key released: ' + k)
-
-
-lis = keyboard.Listener(on_press=on_press, on_release=on_release)
 
 try:
 	eel.start('index.html', size=(1000, 600))

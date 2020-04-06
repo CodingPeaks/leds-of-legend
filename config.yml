@@ -40,4 +40,4 @@ Macros:
   name: dioporco
 Serial:
   BaudRate: 115200
-  Port: COM5
+  Port: COM10
