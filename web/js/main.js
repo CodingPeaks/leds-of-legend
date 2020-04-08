@@ -23,10 +23,12 @@ function testKeyBind(action) {
     if(action == 'keypress'){
         var fadein_delay = document.getElementById('fadein_delay').value;
         var brightness = document.getElementById('brightness').value;
-        var cmd = brightness+';'+fadein_delay;
+        var rgb_color = colorWheel.color.rgb;
+        var color = parseInt(rgb_color.r/100*brightness)+';'+ parseInt(rgb_color.g/100*brightness)+';'+ parseInt(rgb_color.b/100*brightness);
+        var cmd = color+';'+fadein_delay;
     } else if(action == 'keyup') {
         var fadeout_delay = document.getElementById('fadeout_delay').value;
-        var cmd = '0;'+fadeout_delay;
+        var cmd = '0;0;0;'+fadeout_delay;
     }
  eel.serial_write(cmd)(callBack)
 }
@@ -62,17 +64,41 @@ function initSerialPort(port){
 }
 
 function addMacro(){
+    var mid = document.getElementById('macro_name').getAttribute('mid');
+    var id = (mid) ? parseInt(mid) : Date.now();
     var name = document.getElementById('macro_name').value;
     var key = document.getElementById('data').getAttribute('key');
     var keycode = parseInt(document.getElementById('data').getAttribute('keycode'));
     var fadein = parseInt(document.getElementById('fadein_delay').value);
     var fadeout = parseInt(document.getElementById('fadeout_delay').value);
     var brightness = parseInt(document.getElementById('brightness').value);
-    var color = document.getElementById('color').innerText;
-    $('#new-macro-cnt .form-control').val('');
+    //var color = document.getElementById('color').innerText;
+    var rgb_color = colorWheel.color.rgb;
+    var color = parseInt(rgb_color.r/100*brightness)+';'+ parseInt(rgb_color.g/100*brightness)+';'+ parseInt(rgb_color.b/100*brightness);
+
     if(fadein && fadeout &&  brightness && key && name){
-    	eel.add_macro(name, key, keycode, fadein, fadeout, brightness, color)(updateMacroList);
-    	//alert("Successfully saved");
+
+        if(macros) {
+        	if(macros.some(item => item.keycode === keycode) == false){
+
+	            if(macros.some(item => item.id === id) == false) {
+	                //add macro se NON esiste l'id
+	                eel.add_macro(id, name, key, keycode, fadein, fadeout, brightness, color)(updateMacroList);
+	            } else {
+	                //edit macro se esiste l'id
+	                eel.edit_macro(id, name, key, keycode, fadein, fadeout, brightness, color)(updateMacroList);
+	            }
+
+            	$('#new-macro-cnt .form-control').val('');
+            	document.getElementById('macro_name').removeAttribute('mid');
+            } else {
+                alert('Macro binded to this key already exists!')
+            }
+
+    	} else {
+            eel.add_macro(id, name, key, keycode, fadein, fadeout, brightness, color)(updateMacroList);
+        }   
+
 	}else{
 		alert("Please fill all forms before saving");
 	}
@@ -83,21 +109,26 @@ function deleteMacro(macro_name){
 }
 
 function editMacro(macro){
+    var id = $(macro).attr('mid');
     var name = $(macro).attr('mname');
     var key = $(macro).attr('mkey');
-    var brightness = $(macro).attr('mbrightness');
+    var brightness = parseInt($(macro).attr('mbrightness'));
     var color = $(macro).attr('mcolor');
     var keycode = $(macro).attr('mkeycode');
     var fadein = $(macro).attr('mfadein');
     var fadeout = $(macro).attr('mfadeout');
 
     $('#macro_name').val(name);
+    $('#macro_name').attr('mid', id);
+    $('#data').attr('key', key);
     $('#data').val(key);
     $('#data').attr('keycode', keycode);
     $('#fadein_delay').val(fadein);
     $('#fadeout_delay').val(fadeout);
     $('#brightness').val(brightness);
-    colorWheel.color.hexString = color;
+    var rgb_arr = color.split(';');
+    colorWheel.color.hexString = rgbToHex(rgb_arr[0], rgb_arr[1], rgb_arr[2]);
+    colorWheel.color.value = brightness;
 
     $('.dynamic-cnt').fadeOut(100);
     $('#new-macro-cnt').fadeIn(200);
@@ -108,18 +139,28 @@ function getMacroList(list){
     macros = list['Macros'];
     var rows = '';
     for(i=0;i<macros.length;i++){
-        rows += '<div class="macro-li" mname='+macros[i]['name']+' mkey='+macros[i]['key']+' mbrightness='+macros[i]['brightness']+' mcolor='+macros[i]['color']+' mkeycode='+macros[i]['keycode']+' mfadein='+macros[i]['fadein']+' mfadeout='+macros[i]['fadeout']+'>'+macros[i]['name']+'<i title="Delete" onclick="deleteMacro(\''+macros[i]['name']+'\')" class="fas fa-trash-alt macro-i" style="right:5px;"></i></div>';
+        rows += '<div class="macro-li" mid='+macros[i]['id']+' mname='+macros[i]['name']+' mkey='+macros[i]['key']+' mbrightness='+macros[i]['brightness']+' mcolor='+macros[i]['color']+' mkeycode='+macros[i]['keycode']+' mfadein='+macros[i]['fadein']+' mfadeout='+macros[i]['fadeout']+'>'+macros[i]['name']+'<i title="Delete" onclick="deleteMacro(\''+macros[i]['name']+'\')" class="fas fa-trash-alt macro-i" style="right:5px;"></i></div>';
     }
     document.getElementById("macro-ul").innerHTML = rows;
 }
 
 function updateMacroList(){
     eel.read_config()(getMacroList);
+    goToHome();
 }
 
 function goToHome(){
     $('.dynamic-cnt').fadeOut(100);
     $('#homepage').fadeIn(200);
+}
+
+function componentToHex(c) {
+  var hex = parseInt(c).toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
 function showKey(event){
@@ -155,22 +196,18 @@ document.addEventListener('DOMContentLoaded', function(){
 
     colorWheel = new iro.ColorPicker("#colorWheelDemo", {
         width: 230,
-        layout: [
-        { 
-          component: iro.ui.Wheel,
-          options: {
-            wheelLightness: true,
-            wheelAngle: 0,
-            wheelDirection: "anticlockwise"
-          } 
-        }
-        ]
-      
+        color: "rgb(255, 0, 0)",
+        display: 'grid',
+        borderWidth: 1,
+        borderColor: '#9572e8'
     });
 
     colorWheel.on('input:change', function(color, changes){
         document.getElementById('color').style.backgroundColor = color.hexString;
         document.getElementById('color').innerText = color.hexString;
+        document.getElementById('brightness').value = parseInt(color.value);
+        //var color = parseInt(color.rgb.r/100*color.value)+';'+ parseInt(color.rgb.g/100*color.value)+';'+ parseInt(color.rgb.b/100*color.value);
+        //document.getElementById('color').setAttribute('rgb', color); 
     });
 
     colorWheel.on('color:init', function(color){     
@@ -181,6 +218,12 @@ document.addEventListener('DOMContentLoaded', function(){
     colorWheel.on('color:change', function(color){     
         document.getElementById('color').style.backgroundColor = color.hexString;
         document.getElementById('color').innerText = color.hexString;
+
+    });
+
+    document.getElementById('brightness').addEventListener('input', function() {
+        console.log(this.value);
+        colorWheel.color.value = this.value;
     });
 
     document.getElementById('serial-port').addEventListener('change', function() {
@@ -188,7 +231,6 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
     document.getElementById('data').addEventListener('keypress', (event) => {
-        console.log(event);
         event.preventDefault();
         if(event.key != last_key) {
             selectKey(event);
@@ -207,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
     $(document).on('mouseover','.macro-li', function(){
         var buttons = $(this).find('.macro-i');
-        console.log(buttons);
         $(buttons).each(function(i, btn) {
             $(btn).fadeIn(100);
         });
@@ -215,7 +256,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
     $(document).on('mouseout','.macro-li', function(){
         var buttons = $(this).find('.macro-i');
-        console.log(buttons);
         $(buttons).each(function(i, btn) {
             $(btn).fadeOut(100);
         });
@@ -227,13 +267,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
     document.getElementById('new-action').addEventListener('click', function() {
         $('#new-macro-cnt .form-control').val('');
+        document.getElementById('macro_name').removeAttribute('mid');
         $('.dynamic-cnt').fadeOut(100);
         $('#new-macro-cnt').fadeIn(200);
-    });
 
-    document.getElementById('save').addEventListener('click', function() {
-        $('.dynamic-cnt').fadeOut(100);
-        $('#homepage').fadeIn(200);
     });
 
 }, false);

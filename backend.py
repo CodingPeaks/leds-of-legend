@@ -109,8 +109,9 @@ def write_config():
         data = yaml.dump(config, f)
 
 @eel.expose
-def add_macro(name, key, keycode, fadein, fadeout, brightness, color):
+def add_macro(id, name, key, keycode, fadein, fadeout, brightness, color):
     new_macro = {}
+    new_macro['id'] = id
     new_macro['name'] = name.encode("utf-8")
     new_macro['key'] = key.encode("utf-8")
     new_macro['keycode'] = keycode
@@ -125,6 +126,21 @@ def add_macro(name, key, keycode, fadein, fadeout, brightness, color):
         data = yaml.dump(config, f)
     read_config()
     return(config)
+
+@eel.expose
+def edit_macro(id, name, key, keycode, fadein, fadeout, brightness, color):
+    for macro in config['Macros']:
+        if macro['id'] == id:
+            index = config['Macros'].index(macro)
+            config['Macros'][index]['name'] = name.encode("utf-8")
+            config['Macros'][index]['key'] = key.encode("utf-8")
+            config['Macros'][index]['keycode'] = keycode
+            config['Macros'][index]['fadein'] = fadein
+            config['Macros'][index]['fadeout'] = fadeout
+            config['Macros'][index]['brightness'] = brightness
+            config['Macros'][index]['color'] = color.encode("utf-8")
+    write_config()
+
 
 @eel.expose
 def delete_macro(macro_name):
@@ -169,9 +185,9 @@ def on_press(key):
         print(code)
         for macro in config['Macros']:
             if macro['keycode'] == code:
-                brightness = macro['brightness']
+                color = macro['color']
                 delay = macro['fadein']
-                msg = '%s;%s' % (brightness, delay)
+                msg = '%s;%s' % (color, delay)
                 serial_write(msg)
 
     except:
@@ -186,9 +202,9 @@ def on_release(key):
         print(code)
         for macro in config['Macros']:
             if macro['keycode'] == code:
-                brightness = 0
+                color = '0;0;0'
                 delay = macro['fadeout']
-                msg = '%s;%s' % (brightness, delay)
+                msg = '%s;%s' % (color, delay)
                 serial_write(msg)
     except:
         k = key.name  # other keys
