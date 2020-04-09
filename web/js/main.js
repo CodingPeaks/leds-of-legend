@@ -163,6 +163,13 @@ function rgbToHex(r, g, b) {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
+function splash(param) {
+	var time = param;
+ 	setTimeout(function () {
+   		$('#splashscreen').fadeOut(400);
+ 	}, time);
+}
+
 function showKey(event){
     let text = 
         (event.shiftKey ? ' shiftKey' : '') +
@@ -175,7 +182,7 @@ function showKey(event){
 }
 
 function selectKey() {
-    let text = 'Selected: '+
+    let text =
         (event.shiftKey ? ' shiftKey' : '') +
         (event.ctrlKey ? ' ctrlKey' : '') +
         (event.altKey ? ' altKey' : '') +
@@ -183,10 +190,20 @@ function selectKey() {
         (event.repeat ? ' (repeat)' : ' ') + event.key.toUpperCase();
         //console.log(event);
         document.getElementById('data').value = text;
-        document.getElementById('data').setAttribute("key", event.code);
+        document.getElementById('data').setAttribute("key", event.key);
         document.getElementById('data').setAttribute("keycode", event.keyCode);
 }
 
+function keyDownAnimation(key) {
+	$('.keypress-animation').html(key.toUpperCase());
+	$('.keypress-animation').fadeIn(150);
+	$('.keypress-animation').css('font-size', '7em');
+}
+
+function keyUpAnimation() {
+	$('.keypress-animation').css('font-size', '1em');
+	$('.keypress-animation').fadeOut(150);
+}
 
 document.addEventListener('DOMContentLoaded', function(){ 
 
@@ -232,11 +249,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
     document.getElementById('data').addEventListener('keypress', (event) => {
         event.preventDefault();
-        if(event.key != last_key) {
+        if(event.key != last_key || event.type != last_event) {
             selectKey(event);
             testKeyBind(event.type);
             last_key = event.key;
             last_event = event.type;
+            keyDownAnimation(event.key);
         }
     });
 
@@ -244,6 +262,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if(event.type != last_event) {
             testKeyBind(event.type);
             last_event = event.type;
+            keyUpAnimation();
         }
     });
 
