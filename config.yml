@@ -1,20 +1,36 @@
 Macros:
-- brightness: 100
-  color: 254;0;13
+- brightness: 80
+  color: 5;0;163
   fadein: 200
   fadeout: 200
   id: 1586372566931
-  key: KeyG
-  keycode: 103
+  key: q
+  keycode: 113
   name: blu
-- brightness: 86
-  color: 18;188;0
+- brightness: 80
+  color: 0;163;2
   fadein: 60
   fadeout: 70
   id: 1586373124614
-  key: KeyM
-  keycode: 109
-  name: fgefgerfg
+  key: w
+  keycode: 119
+  name: verde
+- brightness: 80
+  color: 163;0;32
+  fadein: 60
+  fadeout: 90
+  id: 1586439646100
+  key: e
+  keycode: 101
+  name: rosso
+- brightness: 85
+  color: 184;181;0
+  fadein: 80
+  fadeout: 80
+  id: 1586439681874
+  key: r
+  keycode: 114
+  name: giallo
 Serial:
   BaudRate: 115200
-  Port: COM5
+  Port: COM3

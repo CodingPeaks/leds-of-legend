@@ -1,3 +1,5 @@
+#include <Adafruit_NeoPixel.h>
+
 #define Sprintln(a) (Serial.println(a))
 #define Sprint(a) (Serial.print(a))
 //#define Sprintln(a)
@@ -5,17 +7,25 @@
 
 String sdata = "";
 int fade = 10;
+
+int r = 0;
+int g = 0;
 int b = 0;
+
 int curb = 0;
 int curtime = 0;
 int test = 0;
 int state = 0;
-#define ledpin D3
+
+#define LEDPIN D3
+#define NUMPIXELS 151
+
+Adafruit_NeoPixel pixels(NUMPIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
 
 void setup (void) {
   Serial.begin(115200);
   Sprintln("Command Interpreter");
-  pinMode(ledpin, OUTPUT);
+  pixels.begin();
 }
 
 void loop() {
@@ -31,12 +41,21 @@ void loop() {
         String got = getValue(sdata, ';', i);
         switch (i) {
           case 0:
-            b = map(got.toInt(), 0, 100, 0, 255);
-            Sprint("b: (" + got + "%) ");
-            Sprintln(b);
-            curtime = micros();
+            r = got.toInt();
+            Sprint("r: ");
+            Sprintln(r);
             break;
           case 1:
+            g = got.toInt();
+            Sprint("g: ");
+            Sprintln(g);
+            break;
+          case 2:
+            b = got.toInt();
+            Sprint("b: ");
+            Sprintln(b);
+            break;
+          case 3:
             fade = got.toInt();
             Sprint("f: ");
             Sprintln(fade);
@@ -54,15 +73,10 @@ void loop() {
 }
 
 void fadeTo() {
-  if (micros() - curtime > fade) {
-    if (state < b) {
-      state++;
-    } else if (state > b) {
-      state--;
-    }
-    analogWrite(ledpin, state);
-    curtime = micros();
+  for (int i = 0; i < NUMPIXELS; i++) { // For each pixel...
+    pixels.setPixelColor(i, pixels.Color(r, g, b));
   }
+  pixels.show();
 }
 
 String getValue(String dat, char separator, int index)
