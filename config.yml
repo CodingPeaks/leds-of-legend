@@ -1,3 +1,18 @@
+LoLChamps:
+- macros:
+  - brightness: 80
+    color: 5;0;163
+    fadein: 200
+    fadeout: 200
+    key: q
+    keycode: 113
+  - brightness: 80
+    color: 5;0;163
+    fadein: 200
+    fadeout: 200
+    key: w
+    keycode: 114
+  name: Blitzcrank
 Macros:
 - brightness: 80
   color: 5;0;163

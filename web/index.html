@@ -23,19 +23,45 @@
             <div id="particles" class="row h-100 align-items-center">
                 <img src="../img/bg-img/background.jpg" class="bgimg">
                 <div id="sidebar" class="col-3 col-md-3 h-100">
-                    <div class="action-header">MACRO</div>
-                    <div class="action-cnt">
-                    	<div class="action-row"><button id="new-action" class="btn action-btn">New</button></div>
-                        <div id="macro-ul" class="macros">
-                            
-                        </div>
+                        <div id="sidebar-menu">
+						  <div class="card">
+						    <div class="card-header" id="custom-macro-btn">
+						      <h5 class="mb-0">
+						        <button class="btn btn-link" data-toggle="collapse" data-target="#custom-macro" aria-expanded="true" aria-controls="custom-macro">
+						        	CUSTOM MACRO
+						        </button>
+						      </h5>
+						    </div>
+						    <div id="custom-macro" class="collapse show" aria-labelledby="custom-macro-btn" data-parent="#sidebar-menu">
+						      <div class="card-body">
+						  		<div class="action-row"><button id="new-action" class="btn action-btn">New</button></div>
+						      	<div id="macro-ul" class="macros"></div>
+						      </div>
+						    </div>
+						  </div>
+
+						  <div class="card">
+						    <div class="card-header" id="lol-champs-btn">
+						      <h5 class="mb-0">
+						        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#lol-champs" aria-expanded="false" aria-controls="lol-champs">
+						        	LOL CHAMPIONS
+						        </button>
+						      </h5>
+						    </div>
+						    <div id="lol-champs" class="collapse" aria-labelledby="lol-champs-btn" data-parent="#sidebar-menu">
+						      <div class="card-body">
+						      	<div id="lolchamps-ul" class="macros"></div>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+
+
                         <div class="form-group serial-cnt">
                             <select class="form-control botbtn" id="serial-port" onkeydown="IgnoreAlpha(event);">
                             </select>
                         </div>
-                    </div>
                 </div>
-
                 <div id="homepage" class="col-9 col-md h-100 dynamic-cnt">
                     <div class="row h-100 align-items-center d-flex">
                         <div class="col-6 col-md-6 h-100">
@@ -113,4 +139,5 @@
 
 <script src="js/particles.min.js"></script>
 <script src="js/part.js"></script>
+<script src="js/bootstrap.min.js"></script>
 </html>

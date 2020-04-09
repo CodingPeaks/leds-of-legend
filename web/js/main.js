@@ -2,12 +2,13 @@ var last_key;
 var last_event;
 var macros;
 var colorWheel;
+var config;
 
 function startKeyLogger(){
     eel.start_kl()( function(){
         $('#start_kl').addClass('disabled-btn');
         $('#stop_kl').removeClass('disabled-btn');
-        $('.animated-gradient').fadeIn(200);
+        //$('.animated-gradient').fadeIn(200);
     });
 }
 
@@ -15,7 +16,7 @@ function stopKeyLogger(){
     eel.stop_kl()( function(){
         $('#stop_kl').addClass('disabled-btn');
         $('#start_kl').removeClass('disabled-btn');
-        $('.animated-gradient').fadeOut(200);
+        //$('.animated-gradient').fadeOut(200);
     });
 }
 
@@ -135,17 +136,38 @@ function editMacro(macro){
 
 }
 
+function getConfig(conf) {
+	config = conf;
+	getMacroList(config['Macros']);
+	getChampList(config['LoLChamps']);
+}
+
 function getMacroList(list){
-    macros = list['Macros'];
+    macros = list;
     var rows = '';
     for(i=0;i<macros.length;i++){
-        rows += '<div class="macro-li" mid='+macros[i]['id']+' mname='+macros[i]['name']+' mkey='+macros[i]['key']+' mbrightness='+macros[i]['brightness']+' mcolor='+macros[i]['color']+' mkeycode='+macros[i]['keycode']+' mfadein='+macros[i]['fadein']+' mfadeout='+macros[i]['fadeout']+'>'+macros[i]['name']+'<i title="Delete" onclick="deleteMacro(\''+macros[i]['name']+'\')" class="fas fa-trash-alt macro-i" style="right:5px;"></i></div>';
+        rows += '<div class="macro-li custom-macro" mid='+macros[i]['id']+' mname='+macros[i]['name']+' mkey='+macros[i]['key']+' mbrightness='+macros[i]['brightness']+' mcolor='+macros[i]['color']+' mkeycode='+macros[i]['keycode']+' mfadein='+macros[i]['fadein']+' mfadeout='+macros[i]['fadeout']+'>'+macros[i]['name']+'<i title="Delete" onclick="deleteMacro(\''+macros[i]['name']+'\')" class="fas fa-trash-alt macro-i" style="right:5px;"></i></div>';
     }
     document.getElementById("macro-ul").innerHTML = rows;
 }
 
+function getChampList(list){
+    var champs = list;
+    var rows = '';
+    for(i=0;i<champs.length;i++){
+        rows += '<div class="macro-li">'+champs[i]['name']+'</div>';
+    }
+    document.getElementById("lolchamps-ul").innerHTML = rows;
+    
+}
+
 function updateMacroList(){
     eel.read_config()(getMacroList);
+    goToHome();
+}
+
+function updateChampList(){
+    eel.read_config()(getChampList);
     goToHome();
 }
 
@@ -210,7 +232,7 @@ function keyUpAnimation() {
 document.addEventListener('DOMContentLoaded', function(){ 
 
     eel.get_serial_ports()(listSerialPorts);
-    eel.read_config()(getMacroList);
+    eel.read_config()(getConfig);
     getSerialPort();
 
     colorWheel = new iro.ColorPicker("#colorWheelDemo", {
@@ -282,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     });
 
-    $(document).on('click','.macro-li', function(){
+    $(document).on('click','.custom-macro', function(){
         editMacro(this);
     });
 

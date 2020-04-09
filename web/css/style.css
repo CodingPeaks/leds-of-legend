@@ -121,6 +121,7 @@ p {
     color: white;
     cursor: pointer;
     width: 100%;
+    height: 40px;
 }
 
 canvas {
@@ -349,10 +350,9 @@ label {
 
 .serial-cnt {
     position: absolute;
-    bottom: 4%;
-    width: 100%;
+    bottom: 2%;
+    width: 93%;
     margin: auto;
-    padding: 0 9px;
 }
 
 #serial-port option {
@@ -360,9 +360,9 @@ label {
 }
 
 .macros {
-    width: 100%;
-    max-height: calc(100% - 130px);
-    overflow: auto;
+    width: 104%;
+    height: 365px;
+    overflow-y : scroll;
 }
 
 #macro_name {
@@ -390,15 +390,15 @@ label {
 }
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #191919; 
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #464646; 
 }
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #464646; 
 }
 
 .macro-i {
@@ -470,4 +470,30 @@ label {
     text-align: center;
     vertical-align: middle;
     line-height: 135px;
+}
+
+.card-header {
+    background-color: #0c0c0c;
+}
+
+.card-body {
+    height: 425px;
+    overflow: hidden;
+    padding: 0 10px 10px 10px;
+}
+
+.card {
+    background: transparent;
+    border: none;
+}
+
+.btn-link {
+    color: white;
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    color: #9572e8;
+    text-decoration: none;
+    cursor: pointer;
 }
