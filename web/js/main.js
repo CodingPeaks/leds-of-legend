@@ -195,12 +195,14 @@ function selectKey() {
 }
 
 function keyDownAnimation(key) {
+	$('#data').css('color', 'transparent');
 	$('.keypress-animation').html(key.toUpperCase());
 	$('.keypress-animation').fadeIn(150);
 	$('.keypress-animation').css('font-size', '7em');
 }
 
 function keyUpAnimation() {
+	$('#data').css('color', 'white');
 	$('.keypress-animation').css('font-size', '1em');
 	$('.keypress-animation').fadeOut(150);
 }

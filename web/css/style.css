@@ -219,7 +219,7 @@ label {
     border-radius: 5px;
     padding: 0px 15px;
     width: 100%;
-    transition: ease-out .5s;
+    transition: ease-out .3s;
 }
 
 .form-control::-webkit-input-placeholder {
