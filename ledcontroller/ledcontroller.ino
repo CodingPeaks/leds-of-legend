@@ -4,20 +4,22 @@
 #define Sprint(a) (Serial.print(a))
 //#define Sprintln(a)
 //#define Sprint(a)
-
+#define fstep 10
 String sdata = "";
-int fade = 10;
 
-int r = 0;
-int g = 0;
-int b = 0;
+byte target_r = 0;
+byte target_g = 0;
+byte target_b = 0;
 
-int curb = 0;
-int curtime = 0;
-int test = 0;
-int state = 0;
+unsigned long fade = 10;
+byte r = 0;
+byte g = 0;
+byte b = 0;
 
-#define LEDPIN D3
+unsigned long curb = 0;
+unsigned long curtime = 0;
+
+#define LEDPIN 22
 #define NUMPIXELS 151
 
 Adafruit_NeoPixel pixels(NUMPIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
@@ -33,6 +35,7 @@ void loop() {
   int i = 0;
 
   if (Serial.available()) {
+    curtime = micros();
     ch = Serial.read();
     sdata += (char)ch;
     if (ch == '\r') {
@@ -73,10 +76,42 @@ void loop() {
 }
 
 void fadeTo() {
-  for (int i = 0; i < NUMPIXELS; i++) { // For each pixel...
-    pixels.setPixelColor(i, pixels.Color(r, g, b));
+
+
+  if (micros() - curtime > fade) {
+
+    if (target_r < r && !(abs(target_r - r) < fstep)) {
+      target_r = target_r + fstep;
+    } else if (target_r > r && !(abs(target_r - r) < fstep)) {
+      target_r = target_r - fstep;
+    }
+
+    if (target_g < g && !(abs(target_g - g) < fstep)) {
+      target_g = target_g + fstep;
+    } else if (target_g > g && !(abs(target_g - g) < fstep)) {
+      target_g = target_g - fstep;
+    }
+
+    if (target_b < b && !(abs(target_b - b) < fstep)) {
+      target_b = target_b + fstep;
+    } else if (target_b > b && !(abs(target_b - b) < fstep)) {
+      target_b = target_b - fstep;
+    }
+
+    for (int i = 0; i < NUMPIXELS; i++) { // For each pixel...
+      pixels.setPixelColor(i, pixels.Color(r, g, b));
+    }
+
+    Serial.print(target_r);
+    Serial.print(" ");
+    Serial.print(target_g);
+    Serial.print(" ");
+    Serial.println(target_b);
+
+    pixels.show();
+
+    curtime = micros();
   }
-  pixels.show();
 }
 
 String getValue(String dat, char separator, int index)
