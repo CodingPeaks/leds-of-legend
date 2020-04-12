@@ -161,8 +161,8 @@ function getChampList(list){
     
 }
 
-function updateMacroList(){
-    eel.read_config()(getMacroList);
+function updateMacroList(macros){
+    getMacroList(macros);
     goToHome();
 }
 

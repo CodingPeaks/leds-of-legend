@@ -125,7 +125,7 @@ def add_macro(id, name, key, keycode, fadein, fadeout, brightness, color):
     with open('config.yml', 'w') as f:
         data = yaml.dump(config, f)
     read_config()
-    return(config)
+    return(config['Macros'])
 
 @eel.expose
 def edit_macro(id, name, key, keycode, fadein, fadeout, brightness, color):
@@ -140,7 +140,8 @@ def edit_macro(id, name, key, keycode, fadein, fadeout, brightness, color):
             config['Macros'][index]['brightness'] = brightness
             config['Macros'][index]['color'] = color.encode("utf-8")
     write_config()
-
+    read_config()
+    return(config['Macros'])
 
 @eel.expose
 def delete_macro(macro_name):
@@ -152,7 +153,7 @@ def delete_macro(macro_name):
             print(config['Macros'])
     with open('config.yml', 'w') as f:
         data = yaml.dump(config, f)
-    return(config)
+    return(config['Macros'])
 
 @eel.expose
 def set_serial_port(port):
