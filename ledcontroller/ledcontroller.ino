@@ -13,6 +13,7 @@ float r_target = 0;
 float g_target = 0;
 float b_target = 0;
 float f = 30;
+bool flag = true;
 
 #define LEDPIN D3
 #define NUMPIXELS 151
@@ -34,6 +35,7 @@ void loop() {
     sdata += (char)ch;
     if (ch == '\r') {
       sdata.trim();
+      flag = true;
       do {
         String got = getValue(sdata, ';', i);
         switch (i) {
@@ -90,6 +92,7 @@ void fade() {
     r = r - stp;
   } else {
     r = r_target;
+    
   }
 
   if (g_target > g + stp) {
@@ -108,7 +111,12 @@ void fade() {
     b = b_target;
   }
 
-  Serial.println("Fading in with step -> " + String(stp) + " | r -> " + String(r) + " | g -> " + String(g) + " | b -> " + String(b));
+  if(r == r_target && g == g_target && b == b_target && flag){
+    Serial.println("Fine");
+    flag = false;
+  }
+
+  //Serial.println("Fading in with step -> " + String(stp) + " | r -> " + String(r) + " | g -> " + String(g) + " | b -> " + String(b));
 
 }
 
