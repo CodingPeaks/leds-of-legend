@@ -13,7 +13,7 @@ from ntpath import basename
 
 config = {}
 lis = 0
-
+oldmsg = ""
 ser = serial.Serial(timeout=1)
 
 eel.init('web')
@@ -179,6 +179,7 @@ def stop_kl():
     lis.stop()	
 
 def on_press(key):
+    global oldmsg
     try:
         k = key.char  # single-char keys
         code = ord(getattr(key, 'char', '0'))
@@ -188,14 +189,16 @@ def on_press(key):
                 color = macro['color']
                 delay = macro['fadein']
                 msg = '%s;%s' % (color, delay)
-                serial_write(msg)
-
+                if msg != oldmsg:
+                    serial_write(msg)
+                    oldmsg = msg
     except:
         k = key.name  # other keys
         print('special')
     print('Key pressed: ' + k)
 
 def on_release(key):
+    global oldmsg
     try:
         k = key.char  # single-char keys
         code = ord(getattr(key, 'char', '0'))
@@ -205,7 +208,9 @@ def on_release(key):
                 color = '0;0;0'
                 delay = macro['fadeout']
                 msg = '%s;%s' % (color, delay)
-                serial_write(msg)
+                if msg != oldmsg:
+                    serial_write(msg)
+                    oldmsg = msg
     except:
         k = key.name  # other keys
         print('special')
