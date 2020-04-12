@@ -6,13 +6,13 @@
 //#define Sprint(a)
 
 String sdata = "";
-byte r = 0;
-byte g = 0;
-byte b = 0;
-byte r_target = 0;
-byte g_target = 0;
-byte b_target = 0;
-int f = 30;
+float r = 0;
+float g = 0;
+float b = 0;
+float r_target = 0;
+float g_target = 0;
+float b_target = 0;
+float f = 30;
 
 #define LEDPIN D3
 #define NUMPIXELS 151
@@ -38,22 +38,22 @@ void loop() {
         String got = getValue(sdata, ';', i);
         switch (i) {
           case 0:
-            r_target = got.toInt();
+            r_target = got.toFloat();
             Sprint("r_target: ");
             Sprintln(r_target);
             break;
           case 1:
-            g_target = got.toInt();
+            g_target = got.toFloat();
             Sprint("g_target: ");
             Sprintln(g_target);
             break;
           case 2:
-            b_target = got.toInt();
+            b_target = got.toFloat();
             Sprint("b_target: ");
             Sprintln(b_target);
             break;
           case 3:
-            f = got.toInt();
+            f = got.toFloat() / 10;
             Sprint("f: ");
             Sprintln(f);
             break;
@@ -66,16 +66,23 @@ void loop() {
   }
 
   for (int i = 0; i < NUMPIXELS; i++) {
-    pixels.setPixelColor(i, pixels.Color(r, g, b));
+    pixels.setPixelColor(i, pixels.Color((int) r, (int) g, (int) b));
   }
   pixels.show();
 
   fade();
 }
 
+float mapfloat(float x, float in_min, float in_max, float out_min, float out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+
+
 void fade() {
 
-  int stp = map(r, 1, 255, 1, f);
+  float stp = mapfloat(max(r, max(g, b)), 0.0, 255.0, 0.01, f);
 
   if (r_target > r + stp) {
     r = r + stp;
@@ -101,7 +108,7 @@ void fade() {
     b = b_target;
   }
 
-  Serial.println("Fading in with step -> " + String(stp) + " | r -> " + String(r));
+  Serial.println("Fading in with step -> " + String(stp) + " | r -> " + String(r) + " | g -> " + String(g) + " | b -> " + String(b));
 
 }
 
