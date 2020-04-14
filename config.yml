@@ -48,4 +48,4 @@ Macros:
   name: k
 Serial:
   BaudRate: 115200
-  Port: COM5
+  Port: COM6

@@ -4,21 +4,76 @@
 </head>
 
 <body>
-	<div class="wheel" id="colorWheelDemo"></div>
-	<br>
-	<label class="switch">
-	  <input id="onoff" type="checkbox" onchange="onOff(this)">
-	  <span class="slider round"></span>
-	</label>
+	<div class="top">
+   <div>
+    <table><tr>
+    <td>Rainbow</td>
+    <td><input type="number" id="rainbow_delay" class="input-field"></td>
+    <td><label class="switch">
+      <input id="animation_one" type="checkbox" onchange="animation_one(this)">
+      <span class="slider round"></span>
+    </label></td>
+    </tr></table>
+   </div>
+  </div>
+  <div class="d-flex center">
+    <div class="wheel" id="colorWheelDemo"></div>
+  </div>
+  <div class="d-flex bottom">
+  	<label class="switch">
+  	  <input id="onoff" type="checkbox" onchange="onOff(this)">
+  	  <span class="slider round"></span>
+  	</label>
+  </div>
 </body>
 
 <style>
 
 body {
-	justify-content: center;
-	align-items: center;
-    display: flex;
     background: #060606;
+    font-family: sans-serif;
+}
+
+table {
+  width:100%;
+  table-layout: fixed;
+}
+
+td {
+  padding: 10px;
+  font-size: 3em;
+  color: #ccc;
+  text-align: center;
+  border-bottom: 2px solid #ccc;
+  font-weight: bold;
+}
+
+.top {
+  display:flex;
+  height:30%;
+  flex-direction: column;
+}
+
+.center {
+  height:50%;
+}
+
+.bottom {
+  height:20%;
+}
+
+.input-field {
+  width: 60px;
+  height: 34px;
+  zoom: 3;
+  text-align: center;
+  font-weight: bold;
+}
+
+.d-flex {
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 #colorWheelDemo {
@@ -30,12 +85,11 @@ body {
 }
 
 .switch {
-  position: absolute;
+  position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
-  zoom: 4;
-  margin-top: 65%;
+  zoom: 3;
 }
 
 .switch input { 
@@ -98,7 +152,7 @@ var url = "http://"+window.location.hostname+"/?";
 var colorWheel = new iro.ColorPicker("#colorWheelDemo", {
   // color picker options
   // Option guide: https://iro.js.org/guide.html#color-picker-options
-  width: 800,
+  width: 700,
   color: "rgb(255, 255, 255)",
   borderWidth: 1,
   borderColor: "#fff",
@@ -139,6 +193,22 @@ function onOff(btn){
 	}
 
 	httpGetAsync(local_url, callback);
+}
+
+function animation_one(btn){
+  console.log(btn.checked);
+  var delay = (document.getElementById('rainbow_delay').value != undefined) ? document.getElementById('rainbow_delay').value : 50;
+  if(btn.checked) {
+    console.log('start animazione 1');
+    localStorage.setItem("a1", btn.checked);
+    var local_url = url+'a=1&d='+delay;
+  } else {
+    console.log('stop animazione 1');
+    localStorage.setItem("a1", btn.checked);
+    var local_url = url+'a=0';
+  }
+
+  httpGetAsync(local_url, callback);
 }
 
 function init() {

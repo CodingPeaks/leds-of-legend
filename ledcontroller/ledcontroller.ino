@@ -31,9 +31,9 @@ int rainbowCycles = 0;
 int rainbowCycleCycles = 0;
 
 #define LEDPIN D3
-#define NUMPIXELS 151
-#define STASSID "contact1"
-#define STAPSK  "0210111966"
+#define NUMPIXELS 100
+#define STASSID "FASTWEB-B81381"
+#define STAPSK  "G7KF48JC3F"
 
 const char* ssid = STASSID;
 const char* password = STAPSK;
