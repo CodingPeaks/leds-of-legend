@@ -1,0 +1,178 @@
+<html>
+<head>
+	<script src="https://cdn.jsdelivr.net/npm/@jaames/iro"></script>
+</head>
+
+<body>
+	<div class="wheel" id="colorWheelDemo"></div>
+	<br>
+	<label class="switch">
+	  <input id="onoff" type="checkbox" onchange="onOff(this)">
+	  <span class="slider round"></span>
+	</label>
+</body>
+
+<style>
+
+body {
+	justify-content: center;
+	align-items: center;
+    display: flex;
+    background: #060606;
+}
+
+#colorWheelDemo {
+	
+}
+
+.IroSlider{
+	margin-top: 30px!important;
+}
+
+.switch {
+  position: absolute;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  zoom: 4;
+  margin-top: 65%;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
+
+<script>
+var url = "http://"+window.location.hostname+"/?";
+
+var colorWheel = new iro.ColorPicker("#colorWheelDemo", {
+  // color picker options
+  // Option guide: https://iro.js.org/guide.html#color-picker-options
+  width: 800,
+  color: "rgb(255, 255, 255)",
+  borderWidth: 1,
+  borderColor: "#fff",
+  handleRadius: 30,
+  sliderSize: 100
+});
+
+
+colorWheel.on('color:init', function(color){
+	console.log('wheel inited');
+	let col = JSON.parse(localStorage.getItem('rgb'));
+  	if( col == null && col == undefined ){
+  		colorWheel.color.rgbString = 'rgb(255, 255, 255)';
+  	} else {
+		colorWheel.color.rgb = col;
+  	}
+})
+
+colorWheel.on('input:end', function(color){
+  var brightness = color.value;
+  localStorage.setItem("rgb", JSON.stringify(color.rgb));
+  localStorage.setItem("brightness", brightness);
+  var local_url = url+'r='+color.rgb.r+'&g='+color.rgb.g+'&b='+color.rgb.b;
+  httpGetAsync(local_url, callback);
+});
+
+function onOff(btn){
+	console.log(btn.checked);
+	let color = colorWheel.color.rgb
+	if(btn.checked) {
+		console.log('accendi');
+		localStorage.setItem("state", btn.checked);
+		var local_url = url+'r='+color.r+'&g='+color.g+'&b='+color.b;
+	} else {
+		console.log('spegni');
+		localStorage.setItem("state", btn.checked);
+		var local_url = url+'r=0&g=0&b=0';
+	}
+
+	httpGetAsync(local_url, callback);
+}
+
+function init() {
+	console.log('dom inited');
+	let state = JSON.parse(localStorage.getItem('state'));
+	let color = colorWheel.color.rgb;
+  	if( state != null && state != undefined ){
+  		document.getElementById("onoff").checked = state;
+  		if(state){
+  			var local_url = url+'r='+color.r+'&g='+color.g+'&b='+color.b;
+  		} else {
+  			var local_url = url+'r=0&g=0&b=0';
+  		}
+  	} else {
+  		console.log('spento di default');
+  		var local_url = url+'r=0&g=0&b=0';
+  	}
+
+  	httpGetAsync(local_url, callback);
+}
+
+function httpGetAsync(theUrl, callback){
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.send(null);
+}
+
+function callback(){
+	
+}
+
+init();
+</script>
