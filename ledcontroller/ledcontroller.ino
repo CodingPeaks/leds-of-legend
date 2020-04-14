@@ -11,6 +11,7 @@
 
 AsyncWebServer server(80);
 
+int ahtt = 0;
 int rhtt, ghtt, bhtt;
 String sdata = "";
 float r = 0;
@@ -22,6 +23,12 @@ float b_target = 0;
 float f = 30;
 bool flag = true;
 bool rcvhtt = true;
+
+unsigned long pixelsInterval = 50;
+unsigned long rainbowPreviousMillis = 0;
+unsigned long rainbowCyclesPreviousMillis = 0;
+int rainbowCycles = 0;
+int rainbowCycleCycles = 0;
 
 #define LEDPIN D3
 #define NUMPIXELS 151
@@ -35,32 +42,16 @@ Adafruit_NeoPixel pixels(NUMPIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
 
 void setup (void) {
   Serial.begin(115200);
-  Sprintln("Command Interpreter");
   pixels.begin();
-
-  if (!SPIFFS.begin()) {
-    Serial.println("An Error has occurred while mounting SPIFFS");
-    return;
-  }
-
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  Serial.println("");
-
-  // Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
+  initSPIFFS();
+  startwifi();
+  waitcon();
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
     request->send(SPIFFS, "/index.html");
+
+    rcvhtt = true;
+    ahtt = 0;
 
     int paramsNr = request->params();
 
@@ -68,11 +59,9 @@ void setup (void) {
 
       AsyncWebParameter* p = request->getParam(i);
 
-      Serial.print("Param name: ");
-      Serial.println(p->name());
-
-      Serial.print("Param value: ");
-      Serial.println(p->value());
+      if (p->name() == "a") {
+        ahtt = p->value().toInt();
+      }
 
       if (p->name() == "r") {
         rhtt = p->value().toInt();
@@ -86,11 +75,16 @@ void setup (void) {
         bhtt = p->value().toInt();
       }
 
-      for (int i = 0; i < NUMPIXELS; i++) {
-        pixels.setPixelColor(i, pixels.Color(rhtt, ghtt, bhtt));
+      if (p->name() == "d") {
+        pixelsInterval = p->value().toInt();
       }
-      pixels.show();
 
+      if (!ahtt) {
+        for (int i = 0; i < NUMPIXELS; i++) {
+          pixels.setPixelColor(i, pixels.Color(rhtt, ghtt, bhtt));
+        }
+        pixels.show();
+      }
       Serial.println("------");
     }
 
@@ -144,71 +138,23 @@ void loop() {
   }
 
   if (!rcvhtt) {
+    ahtt = 0; //stoppa animazione
     for (int i = 0; i < NUMPIXELS; i++) {
       pixels.setPixelColor(i, pixels.Color((int) r, (int) g, (int) b));
     }
     pixels.show();
-
     fade();
   }
-}
 
-float mapfloat(float x, float in_min, float in_max, float out_min, float out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
+  switch (ahtt) { //in base all'animazione
+    case 1: //animazione 1...
+      if ((unsigned long)(millis() - rainbowPreviousMillis) >= pixelsInterval) {
+        rainbowPreviousMillis = millis();
+        rainbow();
+      }
+      break;
 
-
-
-void fade() {
-
-  float stp = mapfloat(max(r, max(g, b)), 0.0, 255.0, 0.01, f);
-
-  if (r_target > r + stp) {
-    r = r + stp;
-  } else if (r_target <= r - stp) {
-    r = r - stp;
-  } else {
-    r = r_target;
-
+    default:
+      break;
   }
-
-  if (g_target > g + stp) {
-    g = g + stp;
-  } else if (g_target <= g - stp) {
-    g = g - stp;
-  } else {
-    g = g_target;
-  }
-
-  if (b_target > b + stp) {
-    b = b + stp;
-  } else if (b_target <= b - stp) {
-    b = b - stp;
-  } else {
-    b = b_target;
-  }
-
-  if (r == r_target && g == g_target && b == b_target && flag) {
-    Serial.println("Fine");
-    flag = false;
-  }
-
-  //Serial.println("Fading in with step -> " + String(stp) + " | r -> " + String(r) + " | g -> " + String(g) + " | b -> " + String(b));
-
-}
-
-String getValue(String dat, char separator, int index) {
-  int found = 0;
-  int strIndex[] = {0, -1};
-  int maxIndex = dat.length() - 1;
-
-  for (int i = 0; i <= maxIndex && found <= index; i++) {
-    if (dat.charAt(i) == separator || i == maxIndex) {
-      found++;
-      strIndex[0] = strIndex[1] + 1;
-      strIndex[1] = (i == maxIndex) ? i + 1 : i;
-    }
-  }
-  return found > index ? dat.substring(strIndex[0], strIndex[1]) : "";
 }
