@@ -14,38 +14,38 @@ LoLChamps:
     keycode: 114
   name: Blitzcrank
 Macros:
-- brightness: 100
-  color: 240;224;254
-  fadein: 2550
-  fadeout: 1
+- brightness: 70
+  color: 125;62;0
+  fadein: 1000
+  fadeout: 1000
   id: 1586796485294
-  key: k
-  keycode: 107
-  name: r
-- brightness: 100
-  color: 254;25;0
-  fadein: 2550
-  fadeout: 7
+  key: d
+  keycode: 100
+  name: Flash
+- brightness: 70
+  color: 0;67;125
+  fadein: 500
+  fadeout: 500
   id: 1586796521712
-  key: w
-  keycode: 119
-  name: w
-- brightness: 100
-  color: 254;25;0
-  fadein: 2550
-  fadeout: 10
+  key: a
+  keycode: 97
+  name: A i u t o o
+- brightness: 70
+  color: 125;62;0
+  fadein: 300
+  fadeout: 300
   id: 1586796536218
-  key: e
-  keycode: 101
-  name: e
+  key: n
+  keycode: 110
+  name: Missing
 - brightness: 60
-  color: 91;22;10
-  fadein: 2550
-  fadeout: 1
+  color: 91;3;0
+  fadein: 300
+  fadeout: 300
   id: 1586801211192
-  key: q
-  keycode: 113
-  name: k
+  key: m
+  keycode: 109
+  name: Vision
 Serial:
   BaudRate: 115200
-  Port: COM6
+  Port: COM7

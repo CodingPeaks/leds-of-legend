@@ -64,7 +64,7 @@ function initSerialPort(port){
     eel.serial_begin(port);
 }
 
-function addMacro(){
+function saveMacro(){
     var mid = document.getElementById('macro_name').getAttribute('mid');
     var id = (mid) ? parseInt(mid) : Date.now();
     var name = document.getElementById('macro_name').value;
@@ -80,21 +80,36 @@ function addMacro(){
     if(fadein && fadeout &&  brightness && key && name){
 
         if(macros) {
-        	if(macros.some(item => item.keycode === keycode) == false){
-
+    
 	            if(macros.some(item => item.id === id) == false) {
-	                //add macro se NON esiste l'id
-	                eel.add_macro(id, name, key, keycode, fadein, fadeout, brightness, color)(updateMacroList);
-	            } else {
-	                //edit macro se esiste l'id
-	                eel.edit_macro(id, name, key, keycode, fadein, fadeout, brightness, color)(updateMacroList);
-	            }
 
-            	$('#new-macro-cnt .form-control').val('');
-            	document.getElementById('macro_name').removeAttribute('mid');
-            } else {
-                alert('Macro binded to this key already exists!')
-            }
+	                //add macro se NON esiste l'id
+	                if(macros.some(item => item.keycode === keycode) == false){
+	                	eel.add_macro(id, name, key, keycode, fadein, fadeout, brightness, color)(updateMacroList);
+	                } else {
+                		alert('Macro binded to this key already exists!')
+            		}
+
+	            } else {
+
+	            		var index = -1;
+
+						var thisMacro = macros.find(function(item, i){
+						  if(item.keycode === keycode){
+						    index = i;
+						    return item;
+						  }
+						});
+
+	            		//edit macro se esiste l'id
+	            		var keycode_exists = macros.some(item => item.keycode === keycode);
+	            		if(keycode_exists == true && thisMacro.id != id){
+	            			alert('Macro binded to this key already exists!');	             
+		                } else {
+                			eel.edit_macro(id, name, key, keycode, fadein, fadeout, brightness, color)(updateMacroList);
+            			}
+
+	            }
 
     	} else {
             eel.add_macro(id, name, key, keycode, fadein, fadeout, brightness, color)(updateMacroList);
@@ -162,6 +177,11 @@ function getChampList(list){
 }
 
 function updateMacroList(macros){
+	$('#new-macro-cnt .form-control').val('');
+    document.getElementById('macro_name').removeAttribute('mid');
+    $('#fadein_delay').val('300');
+    $('#fadeout_delay').val('300');
+    $('#brightness').val('70');
     getMacroList(macros);
     goToHome();
 }
@@ -311,6 +331,9 @@ document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('new-action').addEventListener('click', function() {
         $('#new-macro-cnt .form-control').val('');
         document.getElementById('macro_name').removeAttribute('mid');
+    	$('#fadein_delay').val('300');
+    	$('#fadeout_delay').val('300');
+    	$('#brightness').val('70');
         $('.dynamic-cnt').fadeOut(100);
         $('#new-macro-cnt').fadeIn(200);
 
