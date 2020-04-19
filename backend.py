@@ -63,7 +63,7 @@ def serial_write(message):
     global ser
     if ser.isOpen():
         print("Sending message -> " + message)
-        ser.write(message.encode('ascii')+'\r')
+        ser.write(message.encode('ascii')+b'\r')
         return 1
     else:
         print("No serial port initialized")
