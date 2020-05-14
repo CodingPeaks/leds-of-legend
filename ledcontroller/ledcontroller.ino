@@ -3,7 +3,7 @@
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <FS.h>
-
+#include <EEPROM.h>
 #define Sprintln(a) (Serial.println(a))
 #define Sprint(a) (Serial.print(a))
 //#define Sprintln(a)
@@ -32,8 +32,8 @@ int rainbowCycleCycles = 0;
 
 #define LEDPIN D3
 #define NUMPIXELS 100
-#define STASSID "FASTWEB-B81381"
-#define STAPSK  "G7KF48JC3F"
+#define STASSID "contact1"
+#define STAPSK  "0210111966"
 
 const char* ssid = STASSID;
 const char* password = STAPSK;
@@ -41,6 +41,7 @@ const char* password = STAPSK;
 Adafruit_NeoPixel pixels(NUMPIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
 
 void setup (void) {
+  EEPROM.begin(64);
   Serial.begin(115200);
   pixels.begin();
   initSPIFFS();
@@ -77,6 +78,73 @@ void setup (void) {
 
       if (p->name() == "d") {
         pixelsInterval = p->value().toInt();
+      }
+
+      if (p->name() == "ip1") {
+        int ip1 = p->value().toInt();
+        EEPROM.write(0, ip1);
+      }
+
+      if (p->name() == "ip2") {
+        int ip2 = p->value().toInt();
+        EEPROM.write(1, ip2);
+      }
+
+      if (p->name() == "ip3") {
+        int ip3 = p->value().toInt();
+        EEPROM.write(2, ip3);
+      }
+
+      if (p->name() == "ip4") {
+        int ip4 = p->value().toInt();
+        EEPROM.write(3, ip4);
+      }
+
+
+      if (p->name() == "gw1") {
+        int gw1 = p->value().toInt();
+        EEPROM.write(4, gw1);
+      }
+
+      if (p->name() == "gw2") {
+        int gw2 = p->value().toInt();
+        EEPROM.write(5, gw2);
+      }
+
+      if (p->name() == "gw3") {
+        int gw3 = p->value().toInt();
+        EEPROM.write(6, gw3);
+      }
+
+      if (p->name() == "gw4") {
+        int gw4 = p->value().toInt();
+        EEPROM.write(7, gw4);
+      }
+
+
+      if (p->name() == "sn1") {
+        int sn1 = p->value().toInt();
+        EEPROM.write(8, sn1);
+      }
+
+      if (p->name() == "sn2") {
+        int sn2 = p->value().toInt();
+        EEPROM.write(9, sn2);
+      }
+
+      if (p->name() == "sn3") {
+        int sn3 = p->value().toInt();
+        EEPROM.write(10, sn3);
+      }
+
+      if (p->name() == "sn4") {
+        int sn4 = p->value().toInt();
+        EEPROM.write(11, sn4);
+      }
+
+      if (p->name() == "save") {
+        EEPROM.commit();
+        ESP.restart();
       }
 
       if (!ahtt) {
@@ -128,6 +196,45 @@ void loop() {
             f = got.toFloat() / 10;
             Sprint("f: ");
             Sprintln(f);
+            break;
+          case 4:
+            EEPROM.write(0, got.toInt());
+            break;
+          case 5:
+            EEPROM.write(1, got.toInt());
+            break;
+          case 6:
+            EEPROM.write(2, got.toInt());
+            break;
+          case 7:
+            EEPROM.write(3, got.toInt());
+            break;
+          case 8:
+            EEPROM.write(4, got.toInt());
+            break;
+          case 9:
+            EEPROM.write(5, got.toInt());
+            break;
+          case 10:
+            EEPROM.write(6, got.toInt());
+            break;
+          case 11:
+            EEPROM.write(7, got.toInt());
+            break;
+          case 12:
+            EEPROM.write(8, got.toInt());
+            break;
+          case 13:
+            EEPROM.write(9, got.toInt());
+            break;
+          case 14:
+            EEPROM.write(10, got.toInt());
+            break;
+          case 15:
+            EEPROM.write(11, got.toInt());
+            break;
+          case 16:
+            EEPROM.commit();
             break;
         }
         i++;

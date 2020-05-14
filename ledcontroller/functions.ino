@@ -6,8 +6,27 @@ void initSPIFFS() {
 }
 
 void startwifi() {
+  int ip1 = EEPROM.read(0);
+  int ip2 = EEPROM.read(1);
+  int ip3 = EEPROM.read(2);
+  int ip4 = EEPROM.read(3);
+  int gw1 = EEPROM.read(4);
+  int gw2 = EEPROM.read(5);
+  int gw3 = EEPROM.read(6);
+  int gw4 = EEPROM.read(7);
+  int sn1 = EEPROM.read(8);
+  int sn2 = EEPROM.read(9);
+  int sn3 = EEPROM.read(10);
+  int sn4 = EEPROM.read(11);
+
+  Serial.println("Connecting to "+String(ssid)+" with ip "+String(ip1)+"."+String(ip2)+"."+String(ip3)+"."+String(ip4));
+ 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
+  IPAddress ip(ip1, ip2, ip3, ip4);
+  IPAddress gateway(gw1, gw2, gw3, gw4);
+  IPAddress subnet(sn1, sn2, sn3, sn4);
+  WiFi.config(ip, gateway, subnet);
   Serial.println("");
 }
 
