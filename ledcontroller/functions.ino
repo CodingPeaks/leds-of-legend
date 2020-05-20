@@ -19,8 +19,8 @@ void startwifi() {
   int sn3 = EEPROM.read(10);
   int sn4 = EEPROM.read(11);
 
-  Serial.println("Connecting to "+String(ssid)+" with ip "+String(ip1)+"."+String(ip2)+"."+String(ip3)+"."+String(ip4));
- 
+  Serial.println("Connecting to " + String(ssid) + " with ip " + String(ip1) + "." + String(ip2) + "." + String(ip3) + "." + String(ip4));
+
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   IPAddress ip(ip1, ip2, ip3, ip4);
@@ -100,4 +100,11 @@ String getValue(String dat, char separator, int index) {
     }
   }
   return found > index ? dat.substring(strIndex[0], strIndex[1]) : "";
+}
+
+void turnOff() {
+  for (int i = 0; i < NUMPIXELS; i++) {
+    pixels.setPixelColor(i, pixels.Color(0, 0, 0));
+  }
+  pixels.show();
 }

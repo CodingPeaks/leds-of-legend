@@ -10,7 +10,7 @@
 //#define Sprint(a)
 
 AsyncWebServer server(80);
-
+int mrain = 0;
 int ahtt = 0;
 int rhtt, ghtt, bhtt;
 String sdata = "";
@@ -31,7 +31,7 @@ int rainbowCycles = 0;
 int rainbowCycleCycles = 0;
 
 #define LEDPIN D3
-#define NUMPIXELS 100
+#define NUMPIXELS 103
 #define STASSID "contact1"
 #define STAPSK  "0210111966"
 
@@ -260,7 +260,13 @@ void loop() {
         rainbow();
       }
       break;
-
+      
+    case 2: //animazione 2...
+      if ((unsigned long)(millis() - rainbowPreviousMillis) >= pixelsInterval) {
+        rainbowPreviousMillis = millis();
+        meteorRain(10, 16, false);
+      }
+      break;
     default:
       break;
   }
