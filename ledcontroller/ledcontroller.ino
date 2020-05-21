@@ -23,6 +23,8 @@ float b_target = 0;
 float f = 30;
 bool flag = true;
 bool rcvhtt = true;
+int sz = 10;
+int tr = 64;
 
 unsigned long pixelsInterval = 50;
 unsigned long rainbowPreviousMillis = 0;
@@ -78,6 +80,14 @@ void setup (void) {
 
       if (p->name() == "d") {
         pixelsInterval = p->value().toInt();
+      }
+
+      if (p->name() == "sz") {
+        sz = p->value().toInt();
+      }
+
+      if (p->name() == "tr") {
+        tr = p->value().toInt();
       }
 
       if (p->name() == "ip1") {
@@ -260,11 +270,11 @@ void loop() {
         rainbow();
       }
       break;
-      
+
     case 2: //animazione 2...
       if ((unsigned long)(millis() - rainbowPreviousMillis) >= pixelsInterval) {
         rainbowPreviousMillis = millis();
-        meteorRain(10, 16, false);
+        meteorRain(sz, tr);
       }
       break;
     default:

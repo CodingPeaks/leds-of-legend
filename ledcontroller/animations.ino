@@ -20,7 +20,7 @@ void rainbow() {
   if (rainbowCycles >= 256) rainbowCycles = 0;
 }
 
-void meteorRain(byte meteorSize, byte meteorTrailDecay, boolean meteorRandomDecay) {
+void meteorRain(byte meteorSize, byte meteorTrailDecay) {
 
   if (mrain > NUMPIXELS + NUMPIXELS) {
     mrain = 0;
@@ -30,9 +30,7 @@ void meteorRain(byte meteorSize, byte meteorTrailDecay, boolean meteorRandomDeca
 
   // fade brightness all LEDs one step
   for (int j = 0; j < NUMPIXELS; j++) {
-    if ( (!meteorRandomDecay) || (random(10) > 5) ) {
       fadeToBlack(j, meteorTrailDecay );
-    }
   }
 
   // draw meteor
