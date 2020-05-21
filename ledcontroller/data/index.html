@@ -90,7 +90,7 @@
   	</div>
   	<div id="animation5" class="animation">
   	</div>
-  <div class="d-flex footer">
+  <div id="foot" class="d-flex footer">
   	<div class="d-flex home-btn" onclick="goHome()">
   		<img class="home_icon" src="home-icon.svg" alt="Home Icon" aria-hidden="true" />
   	</div>
@@ -160,6 +160,7 @@ td {
 .footer {
   height:8%;
   background: #3F51B5;
+  transition: 0.5s ease;
 }
 
 .home-btn {
@@ -173,7 +174,6 @@ td {
 
 .home_icon {
 	height: 60%;
-	filter: brightness(0) invert(1);
 }
 
 .input-field {
@@ -310,7 +310,6 @@ input:checked + .slider:before {
 	 width: 20px;
 	 opacity: 0.3;
 	 transition: 0.2s ease;
-	 filter: brightness(0) invert(1);
 }
  .select-box__value {
 	 display: flex;
@@ -326,10 +325,12 @@ input:checked + .slider:before {
 	 width: 100%;
 	 margin: 0;
 	 padding: 15px;
-	 color: white;
+	 color: black;
      background-color: #3F51B5;
+     transition: 0.5s ease;
      text-align: center;
      font-size: 1.5em;
+     font-weight:bold;
 }
  .select-box__list {
 	 position: absolute;
@@ -349,9 +350,11 @@ input:checked + .slider:before {
 	 display: block;
 	 padding: 15px;
 	 background-color: #3F51B5;
-     color: white;
+     color: black;
+     font-weight:bold;
      text-align: center;
      font-size: 1.5em;
+     transition: 0.5s ease;
 }
  .select-box__option:hover, .select-box__option:focus {
 	 color: #546c84;
@@ -395,6 +398,14 @@ colorWheel.on('color:init', function(color){
 
 colorWheel.on('input:end', function(color){
   var brightness = color.value;
+  document.getElementById("foot").style.backgroundColor = color.hexString;
+  var c_el = document.getElementsByClassName('select-box__input-text');
+  var u_el = document.getElementsByClassName('select-box__option');
+  for (var i = 0; i < c_el.length; i ++) {
+	c_el[i].style.backgroundColor = color.hexString;
+	u_el[i].style.backgroundColor = color.hexString;
+  }
+
   localStorage.setItem("rgb", JSON.stringify(color.rgb));
   localStorage.setItem("brightness", brightness);
   var local_url = url+'r='+color.rgb.r+'&g='+color.rgb.g+'&b='+color.rgb.b;
