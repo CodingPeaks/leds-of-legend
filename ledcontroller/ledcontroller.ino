@@ -50,6 +50,14 @@ void setup (void) {
   startwifi();
   waitcon();
 
+  server.on("/arrow-icon.svg", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request->send(SPIFFS, "/arrow-icon.svg");
+  });
+
+  server.on("/home-icon.svg", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request->send(SPIFFS, "/home-icon.svg");
+  });
+
   server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
     request->send(SPIFFS, "/index.html");
 
