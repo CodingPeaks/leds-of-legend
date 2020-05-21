@@ -5,32 +5,102 @@
 
 <body>
 	<div class="top">
-   <div>
-    <table><tr>
-    <td>Rainbow</td>
-    <td><input type="number" id="rainbow_delay" class="input-field"></td>
-    <td><label class="switch">
-      <input id="animation_one" type="checkbox" onchange="animation_one(this)">
-      <span class="slider round"></span>
-    </label></td>
-    </tr></table>
-   </div>
+    <div class="select-box">
+    <div class="select-box__current" tabindex="5">
+        <div class="select-box__value"><input class="select-box__input" type="radio" id="0" value="1" name="Ben" checked="checked" onclick="changeAnimation(this)"/>
+            <p class="select-box__input-text">Rainbow</p>
+        </div>
+        <div class="select-box__value"><input class="select-box__input" type="radio" id="1" value="2" name="Ben" checked="checked" onclick="changeAnimation(this)"/>
+            <p class="select-box__input-text">Meteor</p>
+        </div>
+        <div class="select-box__value"><input class="select-box__input" type="radio" id="2" value="3" name="Ben" checked="checked" onclick="changeAnimation(this)"/>
+            <p class="select-box__input-text">3</p>
+        </div>
+        <div class="select-box__value"><input class="select-box__input" type="radio" id="3" value="4" name="Ben" checked="checked" onclick="changeAnimation(this)"/>
+            <p class="select-box__input-text">4</p>
+        </div>
+        <div class="select-box__value"><input class="select-box__input" type="radio" id="4" value="5" name="Ben" checked="checked" onclick="changeAnimation(this)"/>
+            <p class="select-box__input-text">5</p>
+        </div><img class="select-box__icon" src="arrow-icon.svg" alt="Arrow Icon" aria-hidden="true" /></div>
+    <ul class="select-box__list">
+        <li><label class="select-box__option" for="0" aria-hidden="aria-hidden">Rainbow</label></li>
+        <li><label class="select-box__option" for="1" aria-hidden="aria-hidden">Meteor</label></li>
+        <li><label class="select-box__option" for="2" aria-hidden="aria-hidden">3</label></li>
+        <li><label class="select-box__option" for="3" aria-hidden="aria-hidden">4</label></li>
+        <li><label class="select-box__option" for="4" aria-hidden="aria-hidden">5</label></li>
+    </ul>
+</div>
   </div>
-  <div class="d-flex center">
+  <div id="wheel-cnt" class="d-flex center">
     <div class="wheel" id="colorWheelDemo"></div>
   </div>
-  <div class="d-flex bottom">
+  <div id="status-cnt" class="d-flex bottom">
   	<label class="switch">
   	  <input id="onoff" type="checkbox" onchange="onOff(this)">
   	  <span class="slider round"></span>
   	</label>
+  </div>
+  <div id="animation1" class="animation">
+  	<table>
+	  	<tr>
+	    	<td colspan="2">RAINBOW EFFECT</td>
+		</tr>
+		<tr>
+			<td>Interval [ms]</td>
+		    <td><input type="number" id="rainbow_delay" class="input-field" value="50"></td>
+		</tr>
+		<tr>
+			<td>ON/OFF</td>
+		    <td><label class="switch">
+		      <input id="animation_one" type="checkbox" onchange="animation_one(this)">
+		      <span class="slider round"></span>
+		    </label></td>
+	    </tr>
+	</table>
+  </div>
+   <div id="animation2" class="animation">
+   	<table>
+	  	<tr>
+	    	<td colspan="2">METEOR EFFECT</td>
+		</tr>
+		<tr>
+			<td>Interval [ms]</td>
+		    <td><input type="number" id="meteor_delay" class="input-field" value="20"></td>
+		</tr>
+		<tr>
+			<td>Size</td>
+		    <td><input type="number" id="meteor_size" class="input-field" value="10"></td>
+		</tr>
+		<tr>
+			<td>Tail</td>
+		    <td><input type="number" id="meteor_tail" class="input-field" value="64"></td>
+		</tr>
+		<tr>
+			<td>ON/OFF</td>
+		    <td><label class="switch">
+		      <input id="animation_two" type="checkbox" onchange="animation_two(this)">
+		      <span class="slider round"></span>
+		    </label></td>
+	    </tr>
+	</table>
+  	</div>
+  	<div id="animation3" class="animation">
+  	</div>
+  	<div id="animation4" class="animation">
+  	</div>
+  	<div id="animation5" class="animation">
+  	</div>
+  <div class="d-flex footer">
+  	<div class="d-flex home-btn" onclick="goHome()">
+  		<img class="home_icon" src="home-icon.svg" alt="Home Icon" aria-hidden="true" />
+  	</div>
   </div>
 </body>
 
 <style>
 
 body {
-    background: #060606;
+    background: #151515;
     font-family: sans-serif;
 }
 
@@ -40,26 +110,59 @@ table {
 }
 
 td {
-  padding: 10px;
+  padding: 40px 15px;
   font-size: 3em;
   color: #ccc;
   text-align: center;
-  border-bottom: 2px solid #ccc;
   font-weight: bold;
 }
 
 .top {
   display:flex;
-  height:30%;
+  height:10%;
   flex-direction: column;
 }
 
 .center {
-  height:50%;
+  height:62%;
 }
 
 .bottom {
   height:20%;
+}
+
+.animation {
+	height: 82%;
+	display: none;
+	justify-content: center;
+    align-items: center;
+}
+
+#animation1 {
+
+}
+
+.animation table {
+
+}
+
+.footer {
+  height:8%;
+  background: #3F51B5;
+}
+
+.home-btn {
+	height: 100%;
+	width: 20%;
+}
+
+.home-btn:hover {
+	background: #1e264e;
+}
+
+.home_icon {
+	height: 60%;
+	filter: brightness(0) invert(1);
 }
 
 .input-field {
@@ -144,6 +247,112 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+ .select-box {
+	 position: relative;
+	 display: block;
+	 width: 100%;
+	 margin: 0 auto;
+	 font-family: 'Open Sans', 'Helvetica Neue', 'Segoe UI', 'Calibri', 'Arial', sans-serif;
+	 font-size: 18px;
+	 color: #60666d;
+	 zoom: 2;
+}
+ @media (min-width: 768px) {
+	 .select-box {
+		 width: 99%;
+	}
+}
+ @media (min-width: 992px) {
+	 .select-box {
+		 width: 99%;
+	}
+}
+ @media (min-width: 1200px) {
+	 .select-box {
+		 width: 99%;
+	}
+}
+ .select-box__current {
+	 position: relative;
+	 box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+	 cursor: pointer;
+	 outline: none;
+}
+ .select-box__current:focus + .select-box__list {
+	 opacity: 1;
+	 animation-name: none;
+}
+ .select-box__current:focus + .select-box__list .select-box__option {
+	 cursor: pointer;
+}
+ .select-box__current:focus .select-box__icon {
+	 transform: translateY(-50%) rotate(180deg);
+}
+ .select-box__icon {
+	 position: absolute;
+	 top: 50%;
+	 right: 15px;
+	 transform: translateY(-50%);
+	 width: 20px;
+	 opacity: 0.3;
+	 transition: 0.2s ease;
+	 filter: brightness(0) invert(1);
+}
+ .select-box__value {
+	 display: flex;
+}
+ .select-box__input {
+	 display: none;
+}
+ .select-box__input:checked + .select-box__input-text {
+	 display: block;
+}
+ .select-box__input-text {
+	 display: none;
+	 width: 100%;
+	 margin: 0;
+	 padding: 15px;
+	 color: white;
+     background-color: #3F51B5;
+     text-align: center;
+     font-size: 1.5em;
+}
+ .select-box__list {
+	 position: absolute;
+	 width: 100%;
+	 padding: 0;
+	 list-style: none;
+	 opacity: 0;
+	 animation-name: HideList;
+	 animation-duration: 0.5s;
+	 animation-delay: 0.5s;
+	 animation-fill-mode: forwards;
+	 animation-timing-function: step-start;
+	 box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+	 z-index: 9999;
+}
+ .select-box__option {
+	 display: block;
+	 padding: 15px;
+	 background-color: #3F51B5;
+     color: white;
+     text-align: center;
+     font-size: 1.5em;
+}
+ .select-box__option:hover, .select-box__option:focus {
+	 color: #546c84;
+	 background-color: #fbfbfb;
+}
+ @keyframes HideList {
+	 from {
+		 transform: scaleY(1);
+	}
+	 to {
+		 transform: scaleY(0);
+	}
+}
+
 </style>
 
 <script>
@@ -176,6 +385,8 @@ colorWheel.on('input:end', function(color){
   localStorage.setItem("rgb", JSON.stringify(color.rgb));
   localStorage.setItem("brightness", brightness);
   var local_url = url+'r='+color.rgb.r+'&g='+color.rgb.g+'&b='+color.rgb.b;
+  localStorage.setItem("state", true);
+  document.getElementById("onoff").checked = true;
   httpGetAsync(local_url, callback);
 });
 
@@ -195,6 +406,28 @@ function onOff(btn){
 	httpGetAsync(local_url, callback);
 }
 
+function changeAnimation(self){
+	console.log('animation changed!');
+	document.getElementById("wheel-cnt").style.display = 'none';
+	document.getElementById("status-cnt").style.display = 'none';
+	var animations = document.getElementsByClassName('animation');
+	for (var i = 0; i < animations.length; i ++) {
+	    animations[i].style.display = 'none';
+	}
+	document.getElementById("animation"+self.value).style.display = 'block';
+	localStorage.setItem("state", true);
+    document.getElementById("onoff").checked = true;
+}
+
+function goHome(){
+	document.getElementById("wheel-cnt").style.display = 'flex';
+	document.getElementById("status-cnt").style.display = 'flex';
+	var animations = document.getElementsByClassName('animation');
+	for (var i = 0; i < animations.length; i ++) {
+	    animations[i].style.display = 'none';
+	}
+}
+
 function animation_one(btn){
   console.log(btn.checked);
   var delay = (document.getElementById('rainbow_delay').value != undefined) ? document.getElementById('rainbow_delay').value : 50;
@@ -205,6 +438,25 @@ function animation_one(btn){
   } else {
     console.log('stop animazione 1');
     localStorage.setItem("a1", btn.checked);
+    var local_url = url+'a=0';
+  }
+
+  httpGetAsync(local_url, callback);
+}
+
+function animation_two(btn){
+  console.log(btn.checked);
+  var delay = (document.getElementById('meteor_delay').value != undefined) ? document.getElementById('meteor_delay').value : 20;
+  var size = (document.getElementById('meteor_size').value != undefined) ? document.getElementById('meteor_size').value : 10;
+  var tail = (document.getElementById('meteor_tail').value != undefined) ? document.getElementById('meteor_tail').value : 64;
+
+  if(btn.checked) {
+    console.log('start animazione 2');
+    localStorage.setItem("a2", btn.checked);
+    var local_url = url+'a=2&d='+delay+'&sz='+size+'&tr='+tail;
+  } else {
+    console.log('stop animazione 2');
+    localStorage.setItem("a2", btn.checked);
     var local_url = url+'a=0';
   }
 
@@ -227,7 +479,7 @@ function init() {
   		var local_url = url+'r=0&g=0&b=0';
   	}
 
-  	httpGetAsync(local_url, callback);
+  	//httpGetAsync(local_url, callback);
 }
 
 function httpGetAsync(theUrl, callback){
@@ -244,5 +496,7 @@ function callback(){
 	
 }
 
+
 init();
+
 </script>

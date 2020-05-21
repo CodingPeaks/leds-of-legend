@@ -19,8 +19,8 @@ Macros:
   fadein: 1000
   fadeout: 1000
   id: 1586796485294
-  key: d
-  keycode: 100
+  key: f
+  keycode: 102
   name: Flash
 - brightness: 70
   color: 0;67;125
@@ -48,4 +48,4 @@ Macros:
   name: Vision
 Serial:
   BaudRate: 115200
-  Port: COM7
+  Port: COM8
