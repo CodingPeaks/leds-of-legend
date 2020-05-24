@@ -25,6 +25,8 @@ bool flag = true;
 bool rcvhtt = true;
 int sz = 10;
 int tr = 64;
+unsigned long tmr = 0;
+unsigned long timer_set_at = 0;
 
 unsigned long pixelsInterval = 50;
 unsigned long rainbowPreviousMillis = 0;
@@ -165,6 +167,12 @@ void setup (void) {
         ESP.restart();
       }
 
+      if (p->name() == "tmr") {
+        timer_set_at = millis();
+        int tmr_tmp = p->value().toInt();
+        tmr = tmr_tmp * 60 * 1000;
+      }
+
       if (!ahtt) {
         for (int i = 0; i < NUMPIXELS; i++) {
           pixels.setPixelColor(i, pixels.Color(rhtt, ghtt, bhtt));
@@ -184,6 +192,11 @@ void setup (void) {
 void loop() {
   byte ch;
   int i = 0;
+
+  if (millis() >= timer_set_at + tmr && tmr != 0) {
+    turnOff();
+    ESP.restart();
+  }
 
   if (Serial.available()) {
     rcvhtt = false;
